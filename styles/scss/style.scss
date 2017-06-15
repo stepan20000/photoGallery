@@ -1,0 +1,16 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+@import "../../blocks/nav/nav.scss";
+@import "../../blocks/slider/slider.scss";
+@import "../../blocks/header/header.scss";
+@import "../../blocks/contacts/contacts.scss";
+
+/*---CLEARFIX---*/
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}

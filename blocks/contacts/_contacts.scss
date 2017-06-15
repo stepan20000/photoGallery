@@ -1,0 +1,14 @@
+.contacts {
+  text-align: justify;
+  &__map {
+    display: inline-block;
+    widows: 60%;
+    min-width: 500px;
+  }
+  
+  &__info {
+    display: inline-block;
+    width: 35%;
+    min-width: 300px;
+  }
+}

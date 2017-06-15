@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Contacts</title>
+
+  <meta charset="UTF-8">
+  <meta name="description" content="Training project">
+  <meta name="keywords" content="HTML,CSS,JavaScript">
+  <meta name="author" content="Stepan Yefimov" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc&callback=callback=YOUR.NAMESPACE.myMap"  async defer></script>
+  
+  <link href="styles/style.css" rel="stylesheet"> 
+  
+  <script src="blocks/nav/nav.js"></script>
+  <script src="blocks/contacts/contacts.js"></script>
+
+  
+</head>
+<body class="body">
+  <header class="header">
+    <section class="nav">
+      <div class="nav__container">
+        <h1 class="nav__brand">
+          <a class="nav__brand-link" href="index.html">Logo</a>
+        </h1>
+        <nav class="nav__body">
+          <div class="nav__mobile">
+            <a id="nav-toggle" href="#!"><span></span></a>
+          </div>
+          <ul class="nav__list">
+            <li class="nav__list-li"><a class="nav__link" href="#!">Home</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#!">About</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#!">Services</a>
+              <ul class="nav__dropdown nav__list nav__list_dropdown">
+                <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Web Design</a></li>
+                <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Web Development</a></li>
+                <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Graphic Design</a></li>
+              </ul>
+            </li>
+            <li class="nav__list-li"><a class="nav__link" href="#!">Pricing</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#!">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </section> 
+  </header> 
+  <section class="contacts">
+    <h3 class="contacts__header">Contact Information</h3>
+    <div class="contacts__container">
+      <div class="contacts__map" id="map"></div>
+      <div class="contacts__info"></div>
+    </div>
+  </section>
+</body>
+</html>

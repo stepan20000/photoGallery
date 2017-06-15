@@ -1,0 +1,186 @@
+@charset "UTF-8";
+* {
+  padding: 0;
+  margin: 0; }
+
+.nav {
+  height: 70px;
+  background: #262626; }
+  .nav__container {
+    max-width: 1000px;
+    margin: 0 auto; }
+  .nav__brand {
+    position: absolute;
+    padding-left: 20px;
+    float: left;
+    line-height: 70px;
+    text-transform: uppercase;
+    font-size: 1.4em; }
+  .nav__brand-link, .nav__brand-link:visited {
+    color: #ffffff;
+    text-decoration: none; }
+  .nav__body {
+    float: right; }
+  .nav__list {
+    list-style: none; }
+  .nav__list-li {
+    float: left;
+    position: relative; }
+  .nav__list-li:not(:first-child) {
+    border-left: 1px dotted white; }
+  .nav__link {
+    display: block;
+    padding: 0 20px;
+    line-height: 70px;
+    background: #262626;
+    color: #ffffff;
+    text-decoration: none; }
+    .nav__link:hover {
+      background: #2581DC;
+      color: #ffffff; }
+    .nav__link:not(:only-child):after {
+      padding-left: 4px;
+      content: ' ▾'; }
+  .nav__dropdown {
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    display: none; }
+  .nav__list-dropdown {
+    min-width: 190px; }
+  .nav__link_dropdown {
+    padding: 15px;
+    line-height: 20px; }
+  .nav__mobile {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #262626;
+    height: 70px;
+    width: 70px; }
+
+#nav-toggle {
+  position: absolute;
+  left: 18px;
+  top: 22px;
+  cursor: pointer;
+  padding: 10px 35px 16px 0px; }
+  #nav-toggle span,
+  #nav-toggle span:before,
+  #nav-toggle span:after {
+    cursor: pointer;
+    border-radius: 1px;
+    height: 5px;
+    width: 35px;
+    background: #ffffff;
+    position: absolute;
+    display: block;
+    content: '';
+    transition: all 300ms ease-in-out; }
+  #nav-toggle span:before {
+    top: -10px; }
+  #nav-toggle span:after {
+    bottom: -10px; }
+  #nav-toggle.active span {
+    background-color: transparent; }
+    #nav-toggle.active span:before, #nav-toggle.active span:after {
+      top: 0; }
+    #nav-toggle.active span:before {
+      transform: rotate(45deg); }
+    #nav-toggle.active span:after {
+      transform: rotate(-45deg); }
+
+@media only screen and (max-width: 768px) {
+  .nav__body {
+    width: 100%;
+    padding: 70px 0 15px; }
+  .nav__list {
+    display: none; }
+  .nav__list-li {
+    float: none; }
+  .nav__link {
+    padding: 15px;
+    line-height: 20px; }
+  .nav__link_dropdown {
+    padding-left: 30px; }
+  .nav__mobile {
+    display: block; }
+  .nav__dropdown {
+    position: static; } }
+@media screen and (min-width: 768px) {
+  .nav__list:not(.nav__list_dropdown) {
+    display: block !important; } }
+.slider {
+  text-align: center;
+  background: #ccc; }
+  .slider__slide {
+    max-height: 300px;
+    max-width: 100%; }
+  .slider__viewport {
+    margin: 16px auto;
+    max-height: 300px;
+    text-align: center;
+    display: inline-block; }
+  .slider__controls {
+    -webkit-user-select: none;
+    /* Chrome, Opera, Safari */
+    -moz-user-select: none;
+    /* Firefox 2+ */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+    max-width: 628px;
+    margin: 10px auto; }
+  .slider__goto {
+    color: wheat;
+    font-size: 30px;
+    cursor: pointer; }
+  .slider__goto:hover {
+    transform: scale(1.2); }
+  .slider__goto_left {
+    float: left;
+    margin-left: 10px; }
+  .slider__goto_right {
+    float: right;
+    margin-right: 10px; }
+  .slider__badge {
+    padding: 7px;
+    border-radius: 50%;
+    border: 2px solid wheat;
+    display: inline-block;
+    cursor: pointer;
+    margin: 10px 3px; }
+  .slider__badge:hover {
+    background-color: wheat; }
+  .slider__badge_active {
+    background-color: wheat; }
+
+@keyframes fading {
+  0% {
+    opacity: 0; }
+  50% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+.header {
+  position: relative; }
+
+.contacts {
+  text-align: justify; }
+  .contacts__map {
+    display: inline-block;
+    widows: 60%;
+    min-width: 500px; }
+  .contacts__info {
+    display: inline-block;
+    width: 35%;
+    min-width: 300px; }
+
+/*---CLEARFIX---*/
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both; }
+
+/*# sourceMappingURL=style.css.map */
