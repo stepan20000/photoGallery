@@ -1,0 +1,20 @@
+.find {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; 
+  
+  &__item {
+    display: inline-block;
+    margin: 10px;
+    /*width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 2px 1px 8px 1px #bbb; */
+  }
+  
+  &__img {
+    
+  }
+  
+}

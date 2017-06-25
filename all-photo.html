@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Contacts</title>
+  <title>All photo</title>
   
   <meta charset="UTF-8">
   <meta name="description" content="Training project">
@@ -15,15 +15,13 @@
     crossorigin="anonymous"></script>
 
 
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc"
-  async defer></script>
-
   <link href="styles/style.css" rel="stylesheet"> 
-  <script src="blocks/contacts/contacts.js"></script>
   <script src="blocks/nav/nav.js"></script>
+  <script src="scripts/get-data.js"></script>
+  <script src="blocks/all-photo/all-photo.js"></script>
   
 </head>
-<body class="body">
+<body>
   <header class="header">
     <section class="nav">
       <div class="nav__container">
@@ -44,29 +42,19 @@
                 <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Service 3</a></li>
               </ul>
             </li>
-            <li class="nav__list-li"><a class="nav__link" href="all-photo.html">All Photo</a></li>
-            <li class="nav__list-li"><a class="nav__link">Find</a></li>
-            <li class="nav__list-li"><a class="nav__link nav__link_current">Contacts</a></li>
+            <li class="nav__list-li"><a class="nav__link nav__link_current">All Photo</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="find.html">Find</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="contacts.html">Contacts</a></li>
           </ul>
         </nav>
       </div>
     </section> 
   </header> 
   <div class="content">
-    <section class="contacts">
-      <h2 class="contacts__head">Contact Information</h2>
-      <div class="contacts__container">
-        <div class="contacts__map" id="map"></div>
-        <div class="contacts__info">
-          <h4>State University of Telecommunications</h4>
-          <address class="contacts__address">
-            <p>03680, Kyiv, Solomenska street, 7</p>
-            <p>+38 (044) 248-85-69</p>
-            <p>info@dut.edu.ua</p>
-          </address>
-        </div>
-      </div>
-    </section>
+    <div class="all-photo"></div>
+    <div class="control">
+      <button id="load-more" class="btn">Load more</button>
+    </div>
   </div>
 </body>
 </html>

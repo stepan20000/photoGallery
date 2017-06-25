@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Contacts</title>
+  <title>Find</title>
   
   <meta charset="UTF-8">
   <meta name="description" content="Training project">
@@ -9,21 +9,20 @@
   <meta name="author" content="Stepan Yefimov" >
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet">
   <script
     src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
-
-
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc"
-  async defer></script>
+  <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <link href="styles/style.css" rel="stylesheet"> 
-  <script src="blocks/contacts/contacts.js"></script>
   <script src="blocks/nav/nav.js"></script>
+  <script src="scripts/get-data.js"></script>
+  <script src="blocks/find/find.js"></script>
   
 </head>
-<body class="body">
+<body>
   <header class="header">
     <section class="nav">
       <div class="nav__container">
@@ -45,28 +44,44 @@
               </ul>
             </li>
             <li class="nav__list-li"><a class="nav__link" href="all-photo.html">All Photo</a></li>
-            <li class="nav__list-li"><a class="nav__link">Find</a></li>
-            <li class="nav__list-li"><a class="nav__link nav__link_current">Contacts</a></li>
+            <li class="nav__list-li"><a class="nav__link nav__link_current">Find</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="contacts.html">Contacts</a></li>
           </ul>
         </nav>
       </div>
     </section> 
   </header> 
   <div class="content">
-    <section class="contacts">
-      <h2 class="contacts__head">Contact Information</h2>
-      <div class="contacts__container">
-        <div class="contacts__map" id="map"></div>
-        <div class="contacts__info">
-          <h4>State University of Telecommunications</h4>
-          <address class="contacts__address">
-            <p>03680, Kyiv, Solomenska street, 7</p>
-            <p>+38 (044) 248-85-69</p>
-            <p>info@dut.edu.ua</p>
-          </address>
-        </div>
-      </div>
-    </section>
+     <div class="control control_top">
+      <ul class="control__controls">
+        <li class="control__item">
+          <span>Sort by:</span>       
+          <select id="sort-by" class="select" autocomplete="off">
+            <option value="date" selected>Date</option>
+            <option value="likes">Likes</option>
+          </select>
+        </li>
+        <li class="control__item">
+          <span>Order:</span>
+          <input type="checkbox" class="checkbox" id="order" name="order">
+          <label for="order" class="checkbox__label checkbox__label_order"></label>
+        </li>
+        <li class="control__item">
+          <input type="text" id="search" class="search" placeholder="Search..">
+        </li>
+        <li class="control__item">
+          <button id="reset" class="btn">Reset</button>
+        </li>
+      </ul>
+    </div>
+    <div class="find"></div>
+  </div>
+  <div class="pag clearfix">
+    <button id="page-start" class="pag__page pag__page_out">&laquo;</button>
+    <button id="page-prev" class="pag__page">&lt; Prev.</button>
+    <button id="page-current" class="pag__page pag__page_current" disabled></button>
+    <button id="page-next" class="pag__page">Next &gt;</button>
+    <button id="page-end" class="pag__page pag__page_out">&raquo;</button>
   </div>
 </body>
 </html>

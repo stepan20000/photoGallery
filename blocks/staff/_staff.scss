@@ -1,0 +1,130 @@
+.control {
+    text-align: center;
+  
+  &_top {
+    
+  }
+  
+  &__controls {
+    list-style: none;
+  }
+  
+  &__item {
+    padding: 5px;
+    display: inline-block;
+  }
+}
+
+
+// ------------- Checkbox -------------------
+.checkbox {
+  position: absolute;
+  left: -150px;
+  
+  &__label {
+    position: relative;
+  }
+  
+  &__label_order {
+    margin: 0px 10px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 5px;
+    transform: rotate(-135deg);
+  }
+}
+
+//-------------- Checkbox order --------------------- 
+#order:checked ~ label[for="order"] {
+  transform: rotate(45deg);
+}
+
+// -------------- Search ---------------------------
+.search {
+  width: 250px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-image: url(../blocks/content/img/search-icon.png);
+  background-position: 4px 6px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  background-size: 33px;
+}
+
+// ---------------- Select ------------------
+.select {
+  font-size: 16px;
+  
+  option {
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+}
+
+// --------------- BTN -------------------------
+.btn {
+  font-size: 16px;
+  padding: 5px 10px;
+}
+
+// --------------- PAGINATION ---------------------
+.pag {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 50px;
+  
+  &__page {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    background-color: whitesmoke;
+    
+    &_current {
+      background-color: $nav-background;
+      color: white;
+      border: 1px solid whitesmoke;
+      font-weight: bold;
+    }
+    
+    &:disabled {
+      cursor: default;
+    }
+    
+    &:disabled:not(&_current):not(&_gotoPage)  {
+      opacity: 0.5;
+    }
+    
+    &:hover:not(:disabled) {
+      background-color: #ddd;
+    }
+    
+    &_out:first-child {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    
+    &_out:last-child {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+}
+
+
+@media only screen and (max-width: $breakpoint) {
+  .pag {
+    
+    &__page {
+      padding: 12px 32px;
+      
+      &_gotoPage {
+        display: none;
+      }
+    }
+  }
+}

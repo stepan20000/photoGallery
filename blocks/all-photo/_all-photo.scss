@@ -1,0 +1,26 @@
+.all-photo {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; 
+  
+  &__item {
+    display: inline-block;
+    margin: 10px;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 2px 1px 8px 1px #bbb;
+  }
+  
+  &__img {
+    height: 100%;
+  } 
+}
+
+@media screen and (max-width: 1000px) {
+  .all-photo {
+    justify-content: space-around;  
+  }
+    
+}

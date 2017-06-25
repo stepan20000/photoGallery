@@ -53,7 +53,7 @@ $link-hover-color: #2581DC;
     color: $nav-font-color;
     text-decoration: none;
     
-    &:hover {
+    &:hover, &_current {
       background: $link-hover-color;
       color: $nav-font-color;
     }

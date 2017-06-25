@@ -1,0 +1,55 @@
+my user id: 5604673568
+user id finder https://www.otzberg.net/iguserid/
+http://www.ershad7.com/InstagramUserID/
+
+
+Client ID 7436976c4e434215a006aafafa9ba1d3
+
+Client Secret ff5f91e30e8447f9b5ebb990b77aeaf6 
+
+token: 5604673568.1677ed0.6ad7b3c3e635487abe8565674c462124
+       5604673568.7436976.80a61fbf539244dbab7f434b32ece141
+http://instagram.pixelunion.net/#access_token=5604673568.1677ed0.6ad7b3c3e635487abe8565674c462124
+
+
+Upload from laptop
+https://dash.grum.co/
+
+#sky, #moto, #sea, 
+
+
+wstepan@ukr.net
+Stepan Test
+wstepan20000
+5611812646
+token 5611812646.7436976.a220abe6fa124045b0480377a52336ef
+
+1. #sky Amazing clouds
+2. #moto Motocircle near the river
+3. #sea, #sky Beach in Sri Lanka
+4. #sea, #sky Sea and sky in Egypt
+5. #sea just clear sea water
+
+
+YefimovS@dut-office365.info
+Stepan Test
+yefimovs
+5612036694
+token 5612036694.7436976.c7c066e9de2a4cfd99cee97cce5df2a6
+
+#wallpaper #sky #moto #motogp
+Fail Race ubuntu wallpaper
+
+
+julia_geidur
+5617349057
+access_token=5617349057.7436976.0c9a2542de6b4d5ba4acf6129c3530b1
+
+
+https://api.instagram.com/oauth/authorize/?client_id=7436976c4e434215a006aafafa9ba1d3&redirect_uri=http://localhost&scope=public_content&response_type=token
+
+
+
+https://api.instagram.com/oauth/authorize/?client_id=7436976c4e434215a006aafafa9ba1d3&scope=follower_list&redirect_uri=http://localhost&response_type=token
+
+"This request requires scope=public_content, but this access token is not authorized with this scope. The user must re-authorize your application with scope=public_content to be granted this permissions."

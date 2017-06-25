@@ -1,4 +1,4 @@
-$(document).ready(function() {  
+function navFun() {
   // Toggle visibility of the dropdowns
   $('.nav .nav__list .nav__list-li > .nav__link:not(:only-child)').click(function(e) {
     e.stopPropagation();
@@ -16,4 +16,4 @@ $(document).ready(function() {
   $('#nav-toggle').click(function() {
     $('.nav .nav__list').toggle();
   });
-});
+}
