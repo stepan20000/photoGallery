@@ -1,239 +1,342 @@
-$(document).ready(function(){
-  
-  function makeFind(target, database) {
+$(document).ready(function() {
+  function Find(target) {
     var _this = this;
-    this.database = database;
-    this.currentDatabase = database;
+
+// currentDatabase is a list of media to display, at this moment it is all user's media 
+    this._resetCurrentDatabase(); 
+
     this.find = target;
     this.pageShown = 0;
     this.itemsOnPage = 10;
     this.mql = window.matchMedia('all and (min-width: 768px)');
-    this.hashTags = this._takeHashTags();
-    this.usernames = this._takeUsernames();
-    this.autoCompleteSource = "usernames";
-
-    this._sortBy();
-    this._showPage(0); 
     
-    $(".pag").on("click", function(evt){
+    this.hashTags = this._takeHashTags();
+    this.usernames = users.map(function (user) {
+      return user.username;
+    });
+    this.autoCompleteSource = 'usernames';
+
+    this._showPage(0);
+
+    $('.pag').on('click', function(evt) {
       _this._pagEvtList(evt);
     });
-    
-    $("#sort-by").on("change", function(evt) {
+
+    $('#sort-by').on('change', function(evt) {
       _this._sortBy(evt);
       _this._showPage(0);
     });
-    
-    $("#order").on("change", function(evt) {
+
+    $('#order').on('change', function(evt) {
       _this.currentDatabase.reverse();
       _this._showPage(0);
     });
-    
-    $("#reset").on("click",  function() {
+
+    $('#reset').on('click', function() {
       _this._reset();
     });
-    
-    $("#search").autocomplete({
-      source: _this.usernames
-   });
 
-    $("#search").keyup(function(e){
-      var inputHasHash = /#/.test($(this).val());
-      if(_this.autoCompleteSource == "usernames" && inputHasHash){
-        console.log("set autocomplete from tags");
-        _this.autoCompleteSource = "hashTags";
-        $("#search").autocomplete({
-          source: _this.hashTags
-        });
-      }
-      if(_this.autoCompleteSource == "hashTags" && !inputHasHash) {
-        _this.autoCompleteSource = "usernames";
-        $("#search").autocomplete({
-          source: _this.usernames
-        });
+    this.autoCompleteArr = this.usernames;
+    this.NoResultsLabel = 'No Results';
+    _this.NoResultsFlag = false;
+    $('#search').autocomplete({
+      source: function(request, response) {
+        var results = $.ui.autocomplete.filter(
+          _this.autoCompleteArr,
+          request.term
+        );
+        if (!results.length) {
+          results = [_this.NoResultsLabel];
+          _this.NoResultsFlag = true;
+        } else {
+          _this.NoResultsFlag = false;
+        }
+        response(results);
+      },
+      select: function(event, ui) {
+        if (ui.item.label === _this.NoResultsLabel) {
+          event.preventDefault();
+        }
+      },
+      focus: function(event, ui) {
+        if (ui.item.label === _this.NoResultsLabel) {
+          event.preventDefault();
+        }
       }
     });
-    
-    $("#search").on("change", function(){
-      if($("#search").val()[0] == "#"){
-        _this._displayTag();
+
+    $('#search').keyup(function(e) {
+      var inputHasHash = /^#/.test($(this).val());
+      if (_this.autoCompleteSource == 'usernames' && inputHasHash) {
+        _this.autoCompleteSource = 'hashTags';
+        _this.autoCompleteArr = _this.hashTags;
       }
-      else {
-        _this._displayUser();
+      if (_this.autoCompleteSource == 'hashTags' && !inputHasHash) {
+        _this.autoCompleteSource = 'usernames';
+        _this.autoCompleteArr = _this.usernames;
       }
+    });
+
+    $('#search').on('change', function(evt) {
+      _this._find(evt);
+    });
+
+    $('#search-btn').on('click', function(evt) {
+      _this._find(evt);
     });
   }
-  
-  makeFind.prototype._showPage = function(page) {
-//Clear page
-    $(this.find).html("");
 
-    if(this.currentDatabase.length == 0){
-      console.log("No data loaded");
+  Find.prototype._resetCurrentDatabase = function () {
+    this.currentDatabase =  users.map(function (user) {
+      return user.getMyMedia();
+    }).reduce(function (acc, userMedia, index, arr) {
+      return acc.concat(userMedia);
+    }, []).sort(function (a, b) {
+      return b.created_time - a.created_time;
+    });
+  }
+
+  Find.prototype._showPage = function(page) {
+    //Clear page
+    $(this.find).html('');
+
+    if (this.currentDatabase.length === 0) {
+      console.log('No data loaded, or can not find such user');
+      $('.pag').fadeOut();
       return;
     }
     var start = this.itemsOnPage * page;
     var end = start + this.itemsOnPage;
-// Check if we reach end of the database
-    if(start >= this.currentDatabase.length) {
-      console.log("This page does not exist");
+    // Check if we reach end of the database
+    if (start >= this.currentDatabase.length) {
+      console.log('This page does not exist');
       return;
     }
-// Check if last page us shorter than this.itemsOnPage
-    if(end >= this.currentDatabase.length) {
+    // Check if last page us shorter than this.itemsOnPage
+    if (end >= this.currentDatabase.length) {
       end = this.currentDatabase.length;
     }
-    
-    for(var i = start; i < end; i++) {
-      $("<figure class='find__item'><img class='find__img' src=" + 
-        this.currentDatabase[i].images.standard_resolution.url + "></figure>").appendTo(this.find); 
+
+    for (var i = start; i < end; i++) {
+      $(
+        "<figure class='find__item'><img class='find__img' src=" +
+          this.currentDatabase[i].getImageLink('standard') + " alt='" + this.currentDatabase[i].getTags().join(' ') +
+          "'></figure>"
+      ).appendTo(this.find);
     }
     this._adjustPag(page);
-  }
-  
-  makeFind.prototype._adjustPag = function(page) {
-// Remove old pagination
-    $(".pag__page_gotoPage").remove();
-// Show page number
+  };
+
+  Find.prototype._adjustPag = function(page) {
+    $('.pag').fadeIn();
+    // Remove old pagination
+    $('.pag__page_gotoPage').remove();
+    // Show page number
     this.pageShown = page;
-    $("#page-current").html(page + 1);
-// If first page is shown disable "Prev" and "<<" buttons else unable them
-    if(page === 0){
-      $("#page-start, #page-prev").attr("disabled", true);
+    $('#page-current').html(page + 1);
+    // If first page is shown disable "Prev" and "<<" buttons else unable them
+    if (page === 0) {
+      $('#page-start, #page-prev').attr('disabled', true);
     } else {
-      $("#page-start, #page-prev").attr("disabled", false);
+      $('#page-start, #page-prev').attr('disabled', false);
     }
-// If last page is shown disable "Next" and ">>" buttons else unable them
-    if(page * this.itemsOnPage + this.itemsOnPage >= this.currentDatabase.length) {
-      $("#page-end, #page-next").attr("disabled", true);
+    // If last page is shown disable "Next" and ">>" buttons else unable them
+    if (
+      page * this.itemsOnPage + this.itemsOnPage >=
+      this.currentDatabase.length
+    ) {
+      $('#page-end, #page-next').attr('disabled', true);
     } else {
-      $("#page-end, #page-next").attr("disabled", false);
+      $('#page-end, #page-next').attr('disabled', false);
     }
-    
-    if(this.mql.matches) {
+
+    if (this.mql.matches) {
       var pageBefore, pageAfter, count;
-      var lastPage = Math.floor(this.currentDatabase.length / this.itemsOnPage);
-      pageBefore = pageAfter =  $("#page-current");
+      var lastPage =
+        Math.ceil(this.currentDatabase.length / this.itemsOnPage) - 1;
+      pageBefore = pageAfter = $('#page-current');
       count = 0;
-      for(var i = 1; i <= 6; i++) {
-        if(page - i >= 0 && count < 6) {
+      for (var i = 1; i <= 6; i++) {
+        if (page - i >= 0 && count < 6) {
           count++;
-          pageBefore.before("<button id='page-" + (page - i) + "' class='pag__page pag__page_gotoPage'>" + (page + 1 - i) + "</button>");
-          pageBefore = $("#page-" + (page - i));
+          pageBefore.before(
+            "<button id='page-" +
+              (page - i) +
+              "' class='pag__page pag__page_gotoPage'>" +
+              (page + 1 - i) +
+              '</button>'
+          );
+          pageBefore = $('#page-' + (page - i));
         }
-        if(page + i <= lastPage && count < 6) {
+        if (page + i <= lastPage && count < 6) {
           count++;
-          pageAfter.after("<button id='page-" + (page + i) + "' class='pag__page pag__page_gotoPage'>" + (page + 1 + i) + "</button>");
-          pageAfter = $("#page-" + (page + i));
+          pageAfter.after(
+            "<button id='page-" +
+              (page + i) +
+              "' class='pag__page pag__page_gotoPage'>" +
+              (page + 1 + i) +
+              '</button>'
+          );
+          pageAfter = $('#page-' + (page + i));
         }
       }
 
-      if(parseInt($(pageAfter).html()) - 1 < lastPage) {
-        pageAfter.after("<button class='pag__page pag__page_gotoPage' disabled>...</button>");
+      if (parseInt($(pageAfter).html()) - 1 < lastPage) {
+        pageAfter.after(
+          "<button class='pag__page pag__page_gotoPage' disabled>...</button>"
+        );
       }
-      if(parseInt($(pageBefore).html()) - 1 > 0) {
-        pageBefore.before("<button class='pag__page pag__page_gotoPage' disabled>...</button>");
+      if (parseInt($(pageBefore).html()) - 1 > 0) {
+        pageBefore.before(
+          "<button class='pag__page pag__page_gotoPage' disabled>...</button>"
+        );
       }
     }
-  }
-  
-  makeFind.prototype._pagEvtList = function(evt) {
+  };
+
+  Find.prototype._pagEvtList = function(evt) {
     switch (evt.target) {
-      case $("#page-start")[0]:
+      case $('#page-start')[0]:
         this._showPage(0);
         break;
-      case $("#page-end")[0]:
-        console.log("end");
-        this._showPage(Math.floor(this.currentDatabase.length / this.itemsOnPage));
+      case $('#page-end')[0]:
+        this._showPage(
+          Math.floor(this.currentDatabase.length / this.itemsOnPage)
+        );
         break;
-      case $("#page-prev")[0]:
+      case $('#page-prev')[0]:
         this._showPage(this.pageShown - 1);
         break;
-      case $("#page-next")[0]:
+      case $('#page-next')[0]:
         this._showPage(this.pageShown + 1);
         break;
       default:
-        if($(evt.target).hasClass("pag__page_gotoPage")) {
+        if ($(evt.target).hasClass('pag__page_gotoPage')) {
           this._showPage(parseInt($(evt.target).html()) - 1);
-        }        
+        }
     }
-  }
-  
-  makeFind.prototype._sortBy = function(evt) {
-    if($("#sort-by option:selected").val() == "date") {
-      this.currentDatabase = this.currentDatabase.sort(function(a, b){
+  };
+
+  Find.prototype._sortBy = function(evt) {
+    var _this = this;
+    if ($('#sort-by option:selected').val() == 'date') {
+      this.currentDatabase = this.currentDatabase.sort(function(a, b) {
         return b.created_time - a.created_time;
       });
     }
-    if($("#sort-by option:selected").val() == "likes") {
-      this.currentDatabase = this.currentDatabase.sort(function(a, b){
+    if ($('#sort-by option:selected').val() == 'likes') {
+      this.currentDatabase = this.currentDatabase.sort(function(a, b) {
         return b.likes.count - a.likes.count;
       });
     }
-    if($("#order").is(':checked')) { 
+    if ($('#order').is(':checked')) {
       this.currentDatabase.reverse();
     }
-    console.log(mediaList);
-  }
-  
-makeFind.prototype._reset = function() {
-  $('input:checkbox[name=order]').prop('checked', false);
-  $("option").prop("selected", false);
-  this.currentDatabase = this.database.sort(function(a, b){
-    return b.created_time - a.created_time;
-  });
-  this._showPage(0);
-}
+  };
 
-makeFind.prototype._takeHashTags = function() {
-  var data = this.database;
-  var hashTags = [];
-  for(var i = 0, l = data.length; i < l; i++) {
-    for(var j = 0; j < data[i].tags.length; j++){
-      if(!hashTags.some(function(element, index, array){
-        return element == "#" + data[i].tags[j];
-        }))
-      {
-        hashTags.push("#" + data[i].tags[j]);
+  Find.prototype._reset = function() {
+    $('input:checkbox[name=order]').prop('checked', false);
+    $('option').prop('selected', false);
+    this._resetCurrentDatabase();
+    this._showPage(0);
+  };
+
+  Find.prototype._takeHashTags = function() {
+    var data = this.currentDatabase;
+    var hashTags = [];
+    for (var i = 0, l = data.length; i < l; i++) {
+      for (var j = 0; j < data[i].tags.length; j++) {
+        if (
+          !hashTags.some(function(element, index, array) {
+            return element == '#' + data[i].tags[j];
+          })
+        ) {
+          hashTags.push('#' + data[i].tags[j]);
+        }
       }
     }
-  }
-  return hashTags;
-}
+    return hashTags;
+  };
 
-
-
-makeFind.prototype._takeUsernames = function() {
-  var userNames = [];
-  for(var i = 0, l = this.database.length; i < l; i++) {
-    if(userNames.indexOf(this.database[i].user.username) == -1) {
-      userNames.push(this.database[i].user.username);
+  Find.prototype._displayTag = function(evt) {
+    $('.info').fadeIn();
+    $('.info__user').fadeOut();
+    $('input:checkbox[name=order]').prop('checked', false);
+    $('option').prop('selected', false);
+    var text = $('#search').val().slice(1);
+    this.currentDatabase = []; 
+    
+    var base = users.map(function (user) {
+      return user.getMediaWithTag(text);
+    });
+    
+    base.forEach(function (el) {
+      if(el.length > 0) {
+        this.currentDatabase = this.currentDatabase.concat(el);
+      }
+    }, this);
+    
+    this._sortBy();
+    this._showPage(0);
+    if (base.length > 0) {
+      $('.info__hash').html('#' + text);
+      $('.info__tag-info').html(String(this.currentDatabase.length) + ' photos');
+    } else {
+      $('.info__hash').html('No results found');
     }
-  }
-  return userNames;
-}
+  };
 
-makeFind.prototype._displayTag = function() {
-  console.log("display tag");
-//  this.currentDatabase = this.database.filter(function())
-}
+  Find.prototype._displayUser = function(evt) {
+    $('.info').fadeIn();
+    $('.info').html('');
 
-makeFind.prototype._displayUser = function() {
-  console.log("display user");
-}
+    $('input:checkbox[name=order]').prop('checked', false);
+    $('option').prop('selected', false);
+    var text = $('#search').val();
+    for(var i in users) {
+      if(users[i].username == text) {
+        this.currentDatabase = users[i].getMyMedia();
+        break;
+      }
+    }
+    this._sortBy();
+    this._showPage(0);
+  };
 
-  
-// This is the main funtion for the find page
-  function findFun(){
+  Find.prototype._find = function(evt) {
+    if (!this.NoResultsFlag) {
+      if ($('#search').val()[0] == '#') {
+        this._displayTag(evt);
+      } 
+      else {
+        this._displayUser(evt);
+      }
+    }
+  };
+
+  // This is the main funtion for the find page
+  function findFun() {
     navFun();
-    var find= new makeFind($(".find"), mediaList); 
+    var find = new Find($('.find')[0]);
+    console.log(users);
   }
 
-
-  if(sessionStorage.photoAlbum !== undefined && Number(sessionStorage.timestamp) > Date.now() - relevanceInterval){
-    mediaList = JSON.parse(localStorage.photoAlbum);
+  if(Number(sessionStorage.timestamp) > Date.now() - relevanceInterval){
+    users = JSON.parse(sessionStorage.photoAlbumData);
+    users.forEach(function (user) {
+      Object.setPrototypeOf(user, User.prototype);
+      user.getMyMedia().forEach(function (media){
+        if(media.type == 'carousel') {
+          Object.setPrototypeOf(media, Carousel.prototype);
+        }
+        else if(media.type == 'image') {
+          Object.setPrototypeOf(media, Image.prototype);
+        } 
+      });
+    });
     findFun();
-  } else {
+  }
+  else{
     getData(findFun);
   }
 });

@@ -11,11 +11,12 @@
     overflow: hidden;
     border-radius: 5px;
     box-shadow: 2px 1px 8px 1px #bbb;
+    text-align: center;
   }
   
   &__img {
     height: 100%;
-  } 
+  }
 }
 
 @media screen and (max-width: 1000px) {

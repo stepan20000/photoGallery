@@ -1,7 +1,6 @@
 .content {
-  padding-top: $nav-height + 10px;
   padding-left: 20px;
   padding-right:  20px; 
-  padding-bottom: 50px;
-  height: 100%;
+  height: calc(100vh - 85px);
+  overflow: scroll;
 }

@@ -52,4 +52,6 @@ https://api.instagram.com/oauth/authorize/?client_id=7436976c4e434215a006aafafa9
 
 https://api.instagram.com/oauth/authorize/?client_id=7436976c4e434215a006aafafa9ba1d3&scope=follower_list&redirect_uri=http://localhost&response_type=token
 
+https://api.instagram.com/oauth/authorize/?client_id=7436976c4e434215a006aafafa9ba1d3&scope=likes&redirect_uri=http://localhost&response_type=token
+
 "This request requires scope=public_content, but this access token is not authorized with this scope. The user must re-authorize your application with scope=public_content to be granted this permissions."
