@@ -1,8 +1,9 @@
-$(document).ready(function() {  
   
   var map;
   function myMap() {
-    var mapCanvas = $(".contacts__map")[0];
+    $(document).ready(function() {  
+
+    var mapCanvas =document.getElementById('map');
     if($( window ).width() > 800) {
       $(mapCanvas).css("width", $( window ).width() * 0.6);
     }
@@ -30,8 +31,19 @@ $(document).ready(function() {
 //Set zoom back after 3s
       window.setTimeout(function() {map.setZoom(zm);},3000);
     });
+  });
   }
   
-  navFun();
-  myMap();
-});
+//  navFun();
+//  myMap();
+//  
+//        var map;
+//      function myMap() {
+//        map = new google.maps.Map(document.getElementById('map'), {
+//          center: {lat: -34.397, lng: 150.644},
+//          zoom: 8
+//        });
+//      }
+  
+
+

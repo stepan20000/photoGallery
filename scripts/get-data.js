@@ -2,14 +2,14 @@
 var userIds = [5604673568, 5611812646, 5612036694, 5617349057, 222066133];
 // Instagram's access token
 var token = '5604673568.7436976.80a61fbf539244dbab7f434b32ece141';
-// In Sandbox mode we can only load maximum 20 media an one request
+// In Sandbox mode we can only load maximum 20 media per request
 var numPhotos = 20;
-//The interval after which the data is considered to be obsolete and loaded again
+//The interval after which the data is considered to be obsolete and loaded again (30 min)
 var relevanceInterval = 1800000;
 // The array with user's info and media obtained from instagram API
 var users;
 
-
+//Save users[] with all data to the session storage and also add timestamp for detecting when data is expired
 function saveUsersData(data) {
   if (typeof(Storage) !== "undefined") {
     sessionStorage.setItem("photoAlbumData", JSON.stringify(data));
@@ -85,24 +85,37 @@ function Media (media) {
 
 }
 
-Media.prototype.getImageLink = function (size) {
+Media.prototype.getImage = function (size, classImg) {
+  var src;
+  var alt = this.getTags().join(' ');
   switch (size) {
     case 'low':
-      return this.images.low_resolution.url;
+      src = this.images.low_resolution.url;
+      break;
     case 'standard':
-      return this.images.standard_resolution.url;
+      src =  this.images.standard_resolution.url;
+      break;
     case 'thumbnail':
-      return this.images.thumbnail.url
+      src =  this.images.thumbnail.url;
+      break;
     default:
-      return this.images.standard_resolution.url;
+      src =  this.images.standard_resolution.url;
   }
+  return '<img class="' + classImg + '" src="' + src + '" alt="' + alt + '">';
 }
 
 Media.prototype.getTags = function () {
   return this.tags;
 }
 
+Media.prototype.getImageAsLink = function (size, classA, classImg) {
+  var img = this.getImage(size, classImg);
+  return '<a class="' + classA +  '"  href="' + this.images.standard_resolution.url + '" target="_blank">' 
+    + img +  '</a>';
+}
+
 Media.prototype.setLike = function (el) {
+  console.log('set like');
   var _this = this;
   $(el).removeClass('like_active');
   _this.user_has_liked = true;
@@ -125,6 +138,7 @@ Media.prototype.setLike = function (el) {
   
 Media.prototype.removeLike = function (el) {
   var _this = this;
+  console.log('remove like');
   $(el).addClass('like_active');
   this.user_has_liked = false;
   $(el).html(--this.likes.count);
@@ -143,6 +157,14 @@ Media.prototype.removeLike = function (el) {
     error: function(data) {}
   });
 }
+
+Media.prototype.makeLike = function () {
+  if(this.user_has_liked) {
+    this.removeLike();
+  } else {
+    this.setLike();
+  }
+}
 // ------------------------- END MEDIA --------------------------------
 
 // ------------------------- IMAGE ------------------------------------
@@ -155,36 +177,6 @@ function Image () {
 Image.prototype = Object.create(Media.prototype);
 Image.prototype.constructor = Image;
 
-Image.prototype.showMyBigImage = function () {
-  var _this = this;
-  $('.big-photo__link').attr('href', this.images.standard_resolution.url);
-  $(".big-photo__image").attr({
-    src: this.images.standard_resolution.url,
-    alt: this.tags.join(' ')
-  });
-  $('.instagram.big-photo__control').attr('href', this.link);
-  $('.like').html(this.likes.count);
-  if(!this.user_has_liked) {
-    $('.like').addClass('like_active');
-  }
-  $('.big-photo').slideDown('slow');
-  
-  $('.big-photo .close').on('click', function () {
-    $('.big-photo .close').off('click', '**');
-    $('.like').off('click', '**');  
-    $('.big-photo').slideUp('slow');
-  });
-  
-  $('.like').on('click', function (evt) {
-    console.log(evt.target);
-    if(_this.user_has_liked) {
-      _this.removeLike(evt.target);
-    } else {
-      _this.setLike(evt.target);
-    }
-  });
-  
-}
 
 // ------------------------- END IMAGE --------------------------------
 
@@ -197,13 +189,17 @@ function Carousel () {
 Carousel.prototype = Object.create(Media.prototype);
 Carousel.prototype.constructor = Carousel;
 
+Carousel.prototype.getCarouselImageAsLinks = function (classA, classImg) {
+  var _this = this;
+  return this.carousel_media.map(function (img) {
+    return '<a class="' + classA + '" href="' + img.images.standard_resolution.url + '" target="_blank">' +
+      '<img class="' + classImg + '" src="' + img.images.standard_resolution.url + 
+      '" alt="' + _this.getTags().join(' ')  + '"></a>';
+  });
+}
 // ------------------------- END CAROUSEL -----------------------------
 
-users = userIds.map(function (id) {
-  return new User(id);
-});
-
-
+// Request all neaded data and call given function when data is reseived
 function getData (fun) {
   Promise.all( users.map(function (x) {
     return Promise.resolve(x.takeMyInfo()).then(
@@ -235,8 +231,29 @@ function getData (fun) {
   );
 }
 
-//function fun () {
-//  console.log(users);
-//}
-//
-//getData(fun);
+// This function fills users aray with data from instagram or session.Storage. If there are no data in session.Storage
+// or it is expired (older than elevanceInterva) if calls getData function
+function start(fun) {
+  if(Number(sessionStorage.timestamp) > Date.now() - relevanceInterval){
+    users = JSON.parse(sessionStorage.photoAlbumData);
+    users.forEach(function (user) {
+      Object.setPrototypeOf(user, User.prototype);
+      user.getMyMedia().forEach(function (media){
+        if(media.type == 'carousel') {
+          Object.setPrototypeOf(media, Carousel.prototype);
+        }
+        else if(media.type == 'image') {
+          Object.setPrototypeOf(media, Image.prototype);
+        } 
+      });
+    });
+    fun();
+  }
+  else{
+    getData(fun);
+  }
+}
+// Take a array with user's ids and create corresponding objects
+users = userIds.map(function (id) {
+  return new User(id);
+});

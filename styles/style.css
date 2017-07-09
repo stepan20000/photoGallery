@@ -112,14 +112,20 @@
   .nav__list:not(.nav__list_dropdown) {
     display: block !important; } }
 .slider {
+  height: calc(100vh - 170px);
+  width: 85%;
+  margin: auto;
+  padding: 10px 20px;
+  border-radius: 15px;
   text-align: center;
-  border-radius: 10px; }
-  .slider__slide {
+  position: relative; }
+  .slider__slide, .slider .slider__img {
     max-width: 100%;
     height: 100%;
     position: relative;
     vertical-align: middle;
-    animation: animateleft 0.4s; }
+    animation: animateleft 0.4s;
+    display: inline-block; }
 @keyframes animateleft {
   from {
     left: -500px;
@@ -129,20 +135,18 @@
     opacity: 1; } }
 @keyframes animateright {
   from {
-    right: -500px;
+    right: -1000px;
     opacity: 0; }
   to {
     right: 0;
     opacity: 1; } }
   .slider__viewport {
     margin: auto;
-    height: 500px;
+    height: calc(100vh - 170px);
     text-align: center;
     display: inline-block;
     overflow: hidden;
-    padding: 10px;
-    height: 500px;
-    line-height: 500px; }
+    max-height: 80%; }
   .slider__controls {
     -webkit-user-select: none;
     /* Chrome, Opera, Safari */
@@ -152,7 +156,7 @@
     /* IE 10+ */
     user-select: none;
     max-width: 628px;
-    margin: 10px auto; }
+    margin: auto; }
   .slider__goto {
     color: gray;
     font-size: 30px;
@@ -218,7 +222,8 @@
 .all-photo {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  position: relative; }
   .all-photo__item {
     display: inline-block;
     margin: 10px;
@@ -227,9 +232,23 @@
     overflow: hidden;
     border-radius: 5px;
     box-shadow: 2px 1px 8px 1px #bbb;
-    text-align: center; }
+    text-align: center;
+    position: relative; }
+    .all-photo__item:hover .all-photo__mask {
+      top: 0; }
   .all-photo__img {
     height: 100%; }
+  .all-photo__mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -400px;
+    left: 0;
+    line-height: 300px;
+    text-align: center;
+    padding-left: 40px;
+    box-sizing: border-box;
+    background-color: rgba(10, 10, 10, 0.7); }
 
 @media screen and (max-width: 1000px) {
   .all-photo {
@@ -315,29 +334,32 @@
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px; }
 
-.big-photo {
+#bigMediaContainer {
   display: none;
   position: absolute;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 85px;
+  width: 100%;
+  background-color: rgba(250, 250, 250, 0.8); }
+
+.bigMedia {
+  height: calc(100vh - 170px);
   width: 85%;
   margin: auto;
-  background-color: rgba(250, 250, 250, 0.8);
   padding: 10px 20px;
   border-radius: 15px;
-  height: calc(100vh - 170px); }
-  .big-photo__item {
+  text-align: center;
+  position: relative; }
+  .bigMedia__item {
     text-align: center;
     height: 100%; }
-  .big-photo__image {
+  .bigMedia__image {
     max-height: 90%;
     max-width: 80%;
     border-radius: 10px; }
-  .big-photo__figcaption {
+  .bigMedia__figcaption {
     line-height: 50px;
     height: 10%; }
-  .big-photo__control {
+  .bigMedia__control {
     margin: 0 30px; }
 
 .like {
@@ -346,7 +368,7 @@
   line-height: 50px;
   position: relative;
   cursor: pointer; }
-  .like:hover::before {
+  .like:not(.like_small):hover::before {
     transform: scale(1.1); }
   .like::before {
     font-size: 45px;
@@ -358,6 +380,18 @@
     text-shadow: 0 0 2px black; }
   .like_active::before {
     color: darkgray; }
+  .like_small {
+    color: white;
+    font-size: 20px;
+    cursor: default;
+    font-weight: bold; }
+    .like_small:hover {
+      transform: scale(1); }
+    .like_small::before {
+      font-size: 30px;
+      color: white;
+      left: -30px;
+      top: -12px; }
 
 .instagram {
   height: 50px;
@@ -381,6 +415,14 @@
   .close:hover {
     transform: scale(1.1); }
 
+.carousel-icon {
+  width: 25px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 6px;
+  background-color: black; }
+
 @media only screen and (max-width: 768px) {
   .pag__page {
     padding: 12px 32px; }
@@ -391,8 +433,10 @@
   justify-content: space-around;
   flex-wrap: wrap; }
   .find__item {
-    display: inline-block;
     margin: 10px;
+    width: 100%;
+    margin-top: 10px;
+    display: block;
     /*width: 300px;
     height: 300px;
     overflow: hidden;
@@ -409,6 +453,8 @@
   flex-wrap: wrap;
   overflow: hidden;
   max-height: 500px; }
+.mozaik__item {
+  margin: 5px; }
 .mozaik__image {
   width: 100px;
   margin: 2px; }

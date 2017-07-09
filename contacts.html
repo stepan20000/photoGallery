@@ -15,11 +15,17 @@
     crossorigin="anonymous"></script>
 
 
+<!--
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc"
   async defer></script>
+-->
+    <script src="blocks/contacts/contacts.js"></script>
+
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc&callback=myMap"
+    async defer></script> 
+  
 
   <link href="styles/style.css" rel="stylesheet"> 
-  <script src="blocks/contacts/contacts.js"></script>
   <script src="blocks/nav/nav.js"></script>
   
 </head>
@@ -45,28 +51,26 @@
               </ul>
             </li>
             <li class="nav__list-li"><a class="nav__link" href="all-photo.html">All Photo</a></li>
-            <li class="nav__list-li"><a class="nav__link">Find</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="find.html">Find</a></li>
             <li class="nav__list-li"><a class="nav__link nav__link_current">Contacts</a></li>
           </ul>
         </nav>
       </div>
     </section> 
   </header> 
-  <div class="content">
-    <section class="contacts">
-      <h2 class="contacts__head">Contact Information</h2>
-      <div class="contacts__container">
-        <div class="contacts__map" id="map"></div>
-        <div class="contacts__info">
-          <h4>State University of Telecommunications</h4>
-          <address class="contacts__address">
-            <p>03680, Kyiv, Solomenska street, 7</p>
-            <p>+38 (044) 248-85-69</p>
-            <p>info@dut.edu.ua</p>
-          </address>
-        </div>
+  <div class="contacts">
+    <h2 class="contacts__head">Contact Information</h2>
+    <div class="contacts__container"> 
+      <div class="contacts__map" id="map" ></div>
+      <div class="contacts__info">
+        <h4>State University of Telecommunications</h4>
+        <address class="contacts__address">
+          <p>03680, Kyiv, Solomenska street, 7</p>
+          <p>+38 (044) 248-85-69</p>
+          <p>info@dut.edu.ua</p>
+        </address>
       </div>
-    </section>
+    </div>
   </div>
 </body>
 </html>

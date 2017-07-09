@@ -19,7 +19,9 @@
   <link href="styles/style.css" rel="stylesheet"> 
   <script src="blocks/nav/nav.js"></script>
   <script src="scripts/get-data.js"></script>
-  <script src="blocks/find/find.js"></script>
+  <script src="scripts/mediaContainer.js"></script>
+  <script src="scripts/imageSet.js"></script>
+  <script src="scripts/findPage.js"></script>
   
 </head>
 <body>
@@ -90,13 +92,13 @@
       </div>
     </section>
     <div class="find"></div>
-  </div>
-  <div class="pag clearfix">
-    <button id="page-start" class="pag__page pag__page_out">&laquo;</button>
-    <button id="page-prev" class="pag__page">&lt; Prev.</button>
-    <button id="page-current" class="pag__page pag__page_current" disabled></button>
-    <button id="page-next" class="pag__page">Next &gt;</button>
-    <button id="page-end" class="pag__page pag__page_out">&raquo;</button>
+    <div class="pag clearfix">
+      <button id="page-start" class="pag__page pag__page_out">&laquo;</button>
+      <button id="page-prev" class="pag__page">&lt; Prev.</button>
+      <button id="page-current" class="pag__page pag__page_current" disabled></button>
+      <button id="page-next" class="pag__page">Next &gt;</button>
+      <button id="page-end" class="pag__page pag__page_out">&raquo;</button>
+    </div>
   </div>
 </body>
 </html>

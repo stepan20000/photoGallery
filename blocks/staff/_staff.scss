@@ -120,18 +120,25 @@
 }
 
 
-.big-photo {
+#bigMediaContainer {
   display: none;
   position: absolute;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 85px;
+  width: 100%;
+  background-color: rgba(250, 250, 250, 0.8);
+  
+
+
+}
+
+.bigMedia {
+  height: calc(100vh - 170px);
   width: 85%;
   margin: auto;
-  background-color: rgba(250, 250, 250, 0.8);
   padding: 10px 20px;
   border-radius: 15px;
-  height: calc(100vh - 170px);
+  text-align: center;
+  position: relative;
   
   &__item {
     text-align: center;
@@ -161,7 +168,7 @@
   position: relative;
   cursor: pointer;
   
-  &:hover::before {
+  &:not(.like_small):hover::before {
     transform: scale(1.1);
   }
   
@@ -177,6 +184,24 @@
   
   &_active::before {
     color: darkgray;
+  }
+  
+  &_small {
+    color: white;
+    font-size: 20px;
+    cursor: default;
+    font-weight: bold;
+    
+    &:hover {
+      transform: scale(1);
+    }
+    
+    &::before {
+      font-size: 30px;
+      color: white;
+      left: -30px;
+      top: -12px;
+    }
   }
 }
 
@@ -208,6 +233,15 @@
   &:hover {
     transform: scale(1.1);
   }
+}
+
+.carousel-icon {
+  width: 25px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 6px;
+  background-color: black;
 }
 
 @media only screen and (max-width: $breakpoint) {
