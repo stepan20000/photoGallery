@@ -96,7 +96,6 @@ Slider.prototype.showSlide = function(n, direction) {
   $(this.badges).removeClass("slider__badge_active");  
   
   //Switch on needed image
-  console.log(this.slides[this.slideIndex]);
 //  if(direction == 'right') {
 //    $(this.slides[this.slideIndex]).css('animation', 'animateright 0.4s');
 //  }

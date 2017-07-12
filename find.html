@@ -82,12 +82,12 @@
         <h3 class="info__hash"></h3>
         <p class="info__tag-info"></p>
       </div>
-      <div class="info__user">
-        <div class="info__user-photo"><img class="info__user-img" src="" alt=""></div>
+      <div class="info__user clearfix">
+        <div class="info__user-avatar"><img class="info__user-img" src="" alt=""></div>
         <div class="info__user-info">
-          <h2 class="info__username"></h2>
-          <h4 class="info__name"></h4>
-          <p class="info__photos"></p>
+          <h2 class="info__username info__user-item"></h2>
+          <h4 class="info__name info__user-item"></h4>
+          <p class="info__photos info__user-item"></p>
         </div>
       </div>
     </section>
@@ -100,5 +100,8 @@
       <button id="page-end" class="pag__page pag__page_out">&raquo;</button>
     </div>
   </div>
+  <script>
+    console.log($('.content').html());
+  </script>
 </body>
 </html>

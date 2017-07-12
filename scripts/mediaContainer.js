@@ -70,7 +70,6 @@ mediaContainer.prototype.showBigCarousel = function (container, media) {
   container.html('');
 // get images for slider
    var images = media.getCarouselImageAsLinks('slider__slide', 'slider__img');
-  console.log(images);
    var s = new Slider(container, images);
   var close = $('<span class="close">&#10005;</span>');
   
@@ -183,6 +182,8 @@ function Find(target) {
 
 // currentDatabase is a list of media to display, at this moment it is all user's media 
   this.currentDatabase = this.resetCurrentDatabase(); 
+  this.infoTag = $('.info__tag');
+  this.infoUser = $('.info__user');
 
   this.pageShown = 0;
   this.itemsOnPage = 5;
@@ -211,7 +212,7 @@ function Find(target) {
   });
 
   $('#reset').on('click', function() {
-    _this._reset();
+    _this.reset();
   });
 
   this.autoCompleteArr = this.usernames;
@@ -273,7 +274,6 @@ Find.prototype._showPage = function(page) {
   $(this.target).html('');
 
   if (this.currentDatabase.length === 0) {
-    console.log('No data loaded, or can not find such user');
     $('.pag').fadeOut();
     return;
   }
@@ -413,11 +413,13 @@ Find.prototype._sortBy = function(evt) {
   }
 };
 
-Find.prototype._reset = function() {
+Find.prototype.reset = function() {
   $('input:checkbox[name=order]').prop('checked', false);
   $('option').prop('selected', false);
-  this._resetCurrentDatabase();
+  this.currentDatabase = this.resetCurrentDatabase();
   this._showPage(0);
+  this.infoTag.fadeOut();
+  this.infoUser.fadeOut();
 };
 
 Find.prototype.takeHashTags = function() {
@@ -438,7 +440,8 @@ Find.prototype.takeHashTags = function() {
 };
 
 Find.prototype._displayTag = function(evt) {
-  $('.info').fadeIn();
+  this.infoUser.fadeOut();
+  this.infoTag.fadeIn();
   $('.info__user').fadeOut();
   $('input:checkbox[name=order]').prop('checked', false);
   $('option').prop('selected', false);
@@ -457,7 +460,7 @@ Find.prototype._displayTag = function(evt) {
 
   this._sortBy();
   this._showPage(0);
-  if (base.length > 0) {
+  if ( this.currentDatabase.length > 0) {
     $('.info__hash').html('#' + text);
     $('.info__tag-info').html(String(this.currentDatabase.length) + ' photos');
   } else {
@@ -466,18 +469,28 @@ Find.prototype._displayTag = function(evt) {
 };
 
 Find.prototype._displayUser = function(evt) {
-  $('.info').fadeIn();
-  $('.info').html('');
+  this.infoTag.fadeOut();
+  this.infoUser.fadeIn();
+  $('.info__tag').fadeOut();
 
   $('input:checkbox[name=order]').prop('checked', false);
   $('option').prop('selected', false);
+  var curUser;
   var text = $('#search').val();
   for(var i in users) {
     if(users[i].username == text) {
+      curUser = users[i];
       this.currentDatabase = users[i].getMyMedia();
       break;
     }
   }
+  $('.info__user-img').attr({
+    src: curUser.profile_picture,
+    alt: curUser.full_name + 'profile picture'
+  });
+  $('.info__username').html(curUser.username);
+  $('.info__name').html(curUser.full_name);
+  $('.info__photos').html(curUser.counts.media + ' media');
   this._sortBy();
   this._showPage(0);
 };

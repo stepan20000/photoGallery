@@ -67,7 +67,15 @@
 .btn {
   font-size: 16px;
   padding: 5px 10px;
+  
+  &_large {
+    width: 80%;
+    display: block;
+    margin: auto;
+  }
 }
+
+
 
 // --------------- PAGINATION ---------------------
 .pag {
@@ -85,7 +93,7 @@
     background-color: whitesmoke;
     
     &_current {
-      background-color: $nav-background;
+//      background-color: $nav-background;
       color: white;
       border: 1px solid whitesmoke;
       font-weight: bold;
@@ -116,8 +124,59 @@
 }
 
 .info {
+  padding: 10px;
   
+  &info__tag {
+    
+  }
+  
+  &__hash {
+    display: inline-block;
+    font-size: 21px;
+    margin-right: 25px;
+  }
+  
+  &__tag-info {
+    font-style: italic;
+    display: inline-block;
+  }
+  
+  &__user {
+
+  }
+  
+  &__user-avatar {
+    display: inline-block;
+    margin: 0 30px;
+    float: left;
+  }
+  
+  &__user-img {
+    border-radius: 50%;
+  }
+  
+  &__user-info {
+    display: inline-block;
+    margin-left: 6%;
+  }
+  
+  &__user-item {
+    margin: 10px auto;
+  }
+  
+  &__user-name {
+    
+  }
+  
+  &__name {
+    
+  }
+  
+  &__photos {
+    font-style: italic;
+  }
 }
+
 
 
 #bigMediaContainer {
@@ -148,7 +207,7 @@
   &__image {
     max-height: 90%;
     max-width: 80%;
-    border-radius: 10px;
+    border-radius: 5px;
   }
   
   &__figcaption {
@@ -243,6 +302,71 @@
   border-radius: 6px;
   background-color: black;
 }
+
+.ui-autocomplete {
+  max-height: 250px;
+  overflow: hidden;
+}
+
+// ------------------------------------- LOGIN ---------------------
+.login {
+  display: block;
+  position: absolute;
+  top: 100px;
+  width: 100%;
+
+}
+// --------------------------------------- LOGIN END ------------------------
+// --------------------------------------- FORM -----------------------------
+.form {
+  display: block;
+  min-width: 300px;
+  width: 30%;
+  margin: auto;
+  padding: 50px 20px;
+  background-color: rgba(177, 187, 189, 0.9);
+  border-radius: 20px;
+  position: relative;
+  
+  
+  &__input {
+    display: block;
+    box-sizing: border-box;
+    width: 80%;
+    padding: 12px 10px;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 2px solid grey;
+    background-color: rgb(249, 245, 243);
+  }
+  
+    &__input::placeholder {
+    font-family:  sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #888;
+    opacity: 1;
+  }
+  
+  &__head {
+    font-style: italic;
+    font-weight: normal;
+    text-align: center;
+    font-size: 17px;
+    font-family: cursive;
+  }
+}
+
+#login__login ~ #login__password ~ input[type="submit"] {
+  visibility: hidden;
+}
+
+#login__login:valid ~ #login__password:valid ~ input[type="submit"] {
+  visibility: visible;
+}
+
+// --------------------------------------- FORM END -------------------------
+
 
 @media only screen and (max-width: $breakpoint) {
   .pag {

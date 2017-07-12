@@ -20,14 +20,13 @@ $slide-height: 500px;
     @keyframes animateleft{ from{left:-500px;opacity:0} to{left:0;opacity:1}}
     @keyframes animateright{ from{right:-1000px;opacity:0} to{right:0;opacity:1}}
     display: inline-block;
+    border-radius: 5px;
     
   }
   
   &__viewport {
     margin: auto;
-      height: calc(100vh - 170px);
-
-//    height: $slide-height;
+    height: calc(100vh - 170px);
     text-align: center;
     display: inline-block;
     overflow: hidden;
@@ -35,10 +34,6 @@ $slide-height: 500px;
   }
   
   &__controls {
-    -webkit-user-select: none; /* Chrome, Opera, Safari */
-    -moz-user-select: none; /* Firefox 2+ */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none;
     max-width: 628px;
     margin: auto;
   }

@@ -16,4 +16,19 @@ function navFun() {
   $('#nav-toggle').click(function() {
     $('.nav .nav__list').toggle();
   });
+  
+// Hide login form when SPA starts
+  $('.login').fadeOut();
+  $('#nav-login').on('click', function () {
+    $('.login').fadeIn();
+  });
+  
+  $('.login').on('click', function (evt) {
+    switch(evt.target) {
+      case $('#login-close')[0]:
+        $('.login').fadeOut();
+        break;
+    }
+  });
+  
 }

@@ -8,6 +8,8 @@ var numPhotos = 20;
 var relevanceInterval = 1800000;
 // The array with user's info and media obtained from instagram API
 var users;
+// The link to logged user object or false
+var loggedUser = false;
 
 //Save users[] with all data to the session storage and also add timestamp for detecting when data is expired
 function saveUsersData(data) {
@@ -201,22 +203,16 @@ Carousel.prototype.getCarouselImageAsLinks = function (classA, classImg) {
 
 // Request all neaded data and call given function when data is reseived
 function getData (fun) {
+  console.log('getdata');
   Promise.all( users.map(function (x) {
     return Promise.resolve(x.takeMyInfo()).then(
       function (data) {
         x.saveMyInfo(data);
         return Promise.resolve(x.takeMyMedias());
-      },
-      function (error) {
-        console.log(error);
-      }
-      ).then(
+      }).then(
       function (data) {
         x.saveMyMedias(data);
         return x;
-      },
-      function (error) {
-        console.log(error);
       }
     ); 
   })).then(
@@ -224,16 +220,15 @@ function getData (fun) {
       console.log(users);
       saveUsersData(users);
       fun();
-    },
-    function (error) {
-      console.log(error);
     }
-  );
+  ).catch(function (err) {
+    alert('Can not load data');
+  });
 }
 
 // This function fills users aray with data from instagram or session.Storage. If there are no data in session.Storage
 // or it is expired (older than elevanceInterva) if calls getData function
-function start(fun) {
+function start (fun) {
   if(Number(sessionStorage.timestamp) > Date.now() - relevanceInterval){
     users = JSON.parse(sessionStorage.photoAlbumData);
     users.forEach(function (user) {
@@ -250,7 +245,7 @@ function start(fun) {
     fun();
   }
   else{
-    getData(fun);
+    return getData(fun);
   }
 }
 // Take a array with user's ids and create corresponding objects

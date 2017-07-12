@@ -62,8 +62,11 @@ $link-hover-color: #2581DC;
       padding-left: 4px;
       content: ' ▾';
     } 
-      
-  } // Dropdown list
+    &_login {
+      cursor: pointer;
+    }    
+  }
+  // Dropdown list
   &__dropdown {
     position: absolute;
     z-index: 10;
