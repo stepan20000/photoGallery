@@ -113,6 +113,94 @@ function initMap () {
   });     
 }
 
+function loggedDialog () {
+
+}
+
+function loginDialog () {
+  var dialogForm = $('<form id="login-form" class="form" action="#">' +
+    '<h5 class="form__head">Log into PhotoGallery</h5>' +
+    '<p class="form__wrong">Wrong Login or Password</p>' +
+    '<input type="text" id="login__username" name="username" class="form__input form__input_login" size="21"' +       'maxlength="50" placeholder="USERNAME" pattern="^\\w{6,20}$"  required>' +
+    '<input type="password" id="login__password" name="psw" class="form__input form__input_psw" size="21"' + 'maxlength="50" placeholder="PASSWORD" pattern="^\\w{6,20}$" required>' +
+    '<input type="submit" class="btn btn_large" value="Login">' +  
+    '<span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>' +      
+  '</form>');
+  
+  $('.dialog-window__content').html(dialogForm);
+  $('.dialog-window').fadeIn();
+  
+  $('#login-form').on('submit', function (evt) {
+  evt.preventDefault();
+// Take username and password from input field
+  var username = $('#login__username').val();
+  var password = $('#login__password').val();
+
+  if(makeLogin(username, password)) {
+    displayLoggedUser();
+  } else {
+    displayLoginError();
+  }
+});
+}
+
+function loggedDialog () {
+  $('.dialog-window__content').html('<button id="loadPhoto" class="btn btn_large">Load Photo</button>' +
+  '<button id="logOut" class="btn btn_large">Log out</button>');
+  $('.dialog-window').fadeIn();
+
+  $('#logOut').on('click', function () {
+    localStorage.storedLoggedUser = '0';
+    loggedUser = false;
+    displayNoLoggedUser();
+  });
+}
+
+function makeLogin (username, password) {
+  var usr;
+// Searcvh for a user with such username
+  for(var i = 0; i < users.length; i++){
+    if(users[i].username === username) {
+      usr = users[i];
+      break;
+    }
+  }
+  if(usr === undefined) {
+    return false;
+  }
+// Check the password
+  if(usr.psw == password) {
+    loggedUser = usr;
+    localStorage.setItem('storedLoggedUser', loggedUser.id);
+    return true;
+  } else {
+    return false;;
+  }
+}  
+
+function displayLoginError () {
+  console.log('displayLoginError');
+  $('#login-form .form__wrong').fadeIn();
+}
+
+function displayLoggedUser () {
+// Show success dialog window for 1.5 second
+  $('.dialog-window__content').html('<p class="dialog-window__success">You successfully logged in</p>' + 
+    '<span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>');
+  setTimeout(function () {
+    $('.dialog-window').fadeOut();
+  }, 1500);
+  
+// Show user's profile photo on the navbar
+  $('#nav-login').html('<img class="nav__profile-photo" src="' + loggedUser.profile_picture + '" alt="' + 
+    loggedUser.full_name + ' profile photo">');
+}
+
+function displayNoLoggedUser () {
+  $('#nav-login').html('Log in');
+  $('.dialog-window').fadeOut();
+}
+
 function startSPA () {
 // Separately start navFun because it should be started only once
   $(document).ready(function () {
@@ -123,6 +211,28 @@ function startSPA () {
     } else {
       router.toPath(window.location.hash.slice(1));
     }
+    
+// Check for loggeUser stored in local storage. We store the id of loggedUser or 0
+    if(localStorage.storedLoggedUser) {
+      if(localStorage.storedLoggedUser != '0'){
+        for(var i = 0; i < users.length; i++) {
+          if(localStorage.storedLoggedUser == users[i].id){
+            loggedUser = users[i];
+            break;
+          }
+        }
+        if(!loggedUser) {
+          displayNoLoggedUser();   
+        } else {
+          displayLoggedUser();
+        }
+      } else {
+        displayNoLoggedUser();  
+      }
+    } else {
+      displayNoLoggedUser();
+    }
+
 
     // Start routing
     window.onhashchange = function(evt) {
@@ -130,12 +240,7 @@ function startSPA () {
       console.log('onhachchange');
       console.log(window.location.hash.slice(1));
       router.toPath(window.location.hash.slice(1));
-    };
-    
-    $('#login-form').on('submit', function (evt) {
-      evt.preventDefault();
-    });
-    
+    };  
   });
 }
 

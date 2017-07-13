@@ -309,25 +309,31 @@
 }
 
 // ------------------------------------- LOGIN ---------------------
-.login {
-  display: block;
+.dialog-window {
+  display: none;
   position: absolute;
   top: 100px;
   width: 100%;
-
+  
+  &__success {
+    text-align: center;
+    font-style: italic;
+  }
+  
+  &__content {
+    display: block;
+    min-width: 300px;
+    width: 30%;
+    margin: auto;
+    padding: 50px 20px;
+    background-color: rgba(177, 187, 189, 0.9);
+    border-radius: 20px;
+    position: relative;
+  }
 }
 // --------------------------------------- LOGIN END ------------------------
 // --------------------------------------- FORM -----------------------------
 .form {
-  display: block;
-  min-width: 300px;
-  width: 30%;
-  margin: auto;
-  padding: 50px 20px;
-  background-color: rgba(177, 187, 189, 0.9);
-  border-radius: 20px;
-  position: relative;
-  
   
   &__input {
     display: block;
@@ -355,13 +361,21 @@
     font-size: 17px;
     font-family: cursive;
   }
+  
+  &__wrong {
+    color: red;
+    text-align: center;
+    font-size: 12px;
+    margin-top: 15px;
+    display: none;
+  }
 }
 
-#login__login ~ #login__password ~ input[type="submit"] {
+#login__username ~ #login__password ~ input[type="submit"] {
   visibility: hidden;
 }
 
-#login__login:valid ~ #login__password:valid ~ input[type="submit"] {
+#login__username:valid ~ #login__password:valid ~ input[type="submit"] {
   visibility: visible;
 }
 

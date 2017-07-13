@@ -17,16 +17,19 @@ function navFun() {
     $('.nav .nav__list').toggle();
   });
   
-// Hide login form when SPA starts
-  $('.login').fadeOut();
+  
   $('#nav-login').on('click', function () {
-    $('.login').fadeIn();
+    if(loggedUser) {
+      loggedDialog();
+    } else {
+      loginDialog();
+    }
   });
   
-  $('.login').on('click', function (evt) {
+  $('.dialog-window').on('click', function (evt) {
     switch(evt.target) {
-      case $('#login-close')[0]:
-        $('.login').fadeOut();
+      case $('#dialog-window-close')[0]:
+        $('.dialog-window').fadeOut();
         break;
     }
   });

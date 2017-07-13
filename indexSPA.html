@@ -26,7 +26,6 @@
       <h3 class="mozaik__head">Many Thumbnails</h3>
       <div class="mozaik__wrapper">
         <div class="mozaik__container">
-          content from js 
         </div>
       </div>
     </div>
@@ -159,16 +158,17 @@
   
   
 <!-- ------------------------ LOGIN --------------------- -->
-  <section class="login">
+  <section class="dialog-window">
+    <div class="dialog-window__content"></div>
+<!--
     <form id="login-form" class="form" action="#">
       <h5 class="form__head">Log into PhotoGallery</h5>
-      <input type="text" id="login__login" name="userid" class="form__input form__input_login" size="21" maxlength="50" placeholder="USERNAME" pattern="^\w{6,20}$"  required>
-      <label class="form__label_hidden" for="login__login"></label>
+      <p class="form__wrong">Wrong Login or Password</p>
+      <input type="text" id="login__username" name="username" class="form__input form__input_login" size="21" maxlength="50" placeholder="USERNAME" pattern="^\w{6,20}$"  required>
       <input type="password" id="login__password" name="psw" class="form__input form__input_psw" size="21" maxlength="50" placeholder="PASSWORD" pattern="^\w{6,20}$" required>
-      <label class="form__label_hidden" for="login__password"></label>
       <input type="submit" class="btn btn_large" value="Login">  
-      <span id="login-close" href="#" class="close" title="Close login form">✕</span>      
-    </form>
+      <span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>      
+    </form> -->
   </section>
 </body>
 </html>

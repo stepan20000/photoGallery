@@ -42,7 +42,14 @@
       padding-left: 4px;
       content: ' ▾'; }
     .nav__link_login {
-      cursor: pointer; }
+      cursor: pointer;
+      display: block;
+      height: 100%;
+      padding: 0 10px;
+      line-height: 70px; }
+      .nav__link_login:hover {
+        background: #262626;
+        color: #ffffff; }
   .nav__dropdown {
     position: absolute;
     z-index: 10;
@@ -61,6 +68,10 @@
     background: #262626;
     height: 70px;
     width: 70px; }
+  .nav__profile-photo {
+    height: 60px;
+    border-radius: 2px;
+    vertical-align: middle; }
 
 #nav-toggle {
   position: absolute;
@@ -449,47 +460,56 @@
   max-height: 250px;
   overflow: hidden; }
 
-.login {
-  display: block;
+.dialog-window {
+  display: none;
   position: absolute;
   top: 100px;
   width: 100%; }
-
-.form {
-  display: block;
-  min-width: 300px;
-  width: 30%;
-  margin: auto;
-  padding: 50px 20px;
-  background-color: rgba(177, 187, 189, 0.9);
-  border-radius: 20px;
-  position: relative; }
-  .form__input {
-    display: block;
-    box-sizing: border-box;
-    width: 80%;
-    padding: 12px 10px;
-    margin: 20px auto;
-    border-radius: 8px;
-    border: 2px solid grey;
-    background-color: #f9f5f3; }
-  .form__input::placeholder {
-    font-family: sans-serif;
-    font-style: italic;
-    font-size: 13px;
-    color: #888;
-    opacity: 1; }
-  .form__head {
-    font-style: italic;
-    font-weight: normal;
+  .dialog-window__success {
     text-align: center;
-    font-size: 17px;
-    font-family: cursive; }
+    font-style: italic; }
+  .dialog-window__content {
+    display: block;
+    min-width: 300px;
+    width: 30%;
+    margin: auto;
+    padding: 50px 20px;
+    background-color: rgba(177, 187, 189, 0.9);
+    border-radius: 20px;
+    position: relative; }
 
-#login__login ~ #login__password ~ input[type="submit"] {
+.form__input {
+  display: block;
+  box-sizing: border-box;
+  width: 80%;
+  padding: 12px 10px;
+  margin: 20px auto;
+  border-radius: 8px;
+  border: 2px solid grey;
+  background-color: #f9f5f3; }
+.form__input::placeholder {
+  font-family: sans-serif;
+  font-style: italic;
+  font-size: 13px;
+  color: #888;
+  opacity: 1; }
+.form__head {
+  font-style: italic;
+  font-weight: normal;
+  text-align: center;
+  font-size: 17px;
+  font-family: cursive; }
+.form__wrong {
+  color: red;
+  text-align: center;
+  font-size: 12px;
+  margin-top: 15px;
+  display: none; }
+
+#login__username ~ #login__password ~ input[type="submit"] {
   visibility: hidden; }
 
-#login__login:valid ~ #login__password:valid ~ input[type="submit"] {
+#login__username:valid ~ #login__password:valid ~ input[type="submit"] {
   visibility: visible; }
 
 @media only screen and (max-width: 768px) {

@@ -8,7 +8,7 @@ var numPhotos = 20;
 var relevanceInterval = 1800000;
 // The array with user's info and media obtained from instagram API
 var users;
-// The link to logged user object or false
+//loggedUser is a refference to the user object which is logged in now
 var loggedUser = false;
 
 //Save users[] with all data to the session storage and also add timestamp for detecting when data is expired
@@ -44,6 +44,7 @@ User.prototype.saveMyInfo = function (data) {
   for(var i in keys) {
     this[keys[i]] = data.data[keys[i]];
   }
+  this.psw = this.username + 'psw';
 }
 
 User.prototype.takeMyMedias = function () {
@@ -242,6 +243,7 @@ function start (fun) {
         } 
       });
     });
+    
     fun();
   }
   else{

@@ -64,6 +64,15 @@ $link-hover-color: #2581DC;
     } 
     &_login {
       cursor: pointer;
+      display: block;
+      height: 100%;
+      padding: 0 10px;
+      line-height: 70px;
+      
+      &:hover {
+        background: $nav-background;
+        color: $nav-font-color;
+      }
     }    
   }
   // Dropdown list
@@ -91,6 +100,12 @@ $link-hover-color: #2581DC;
     background: $nav-background;
     height: $nav-height;
     width: $nav-height;
+  }
+  
+  &__profile-photo {
+    height: 60px;
+    border-radius: 2px;
+    vertical-align: middle;
   }
 }
 
