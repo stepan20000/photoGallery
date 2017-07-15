@@ -10,14 +10,19 @@ var relevanceInterval = 1800000;
 var users;
 //loggedUser is a refference to the user object which is logged in now
 var loggedUser = false;
-
+// Global variables for mediaContainers objects
 var allPhoto, find;
 
-// Take a array with user's ids and create corresponding objects
+var mapInited = false;
+
+// Take a array with user's ids and create corresponding objects. After that elements in users array are instance of myUser
 users = userIds.map(function (id) {
   return new MyUser(id);
 });
 
+// indexFun, allPhotoFun, findFun, contactsFun are used in router.
+// The fadeOut not neaded .content div  ans fadeIn neaded .contant div 
+// contactsFun also call initMap() 
 function indexFun () {
 // Adjust navigation bar
   $('.nav__link').removeClass('nav__link_current');
@@ -52,48 +57,53 @@ function contactsFun () {
     // Switch off all containers and switch on needed index container
   $('.content').fadeOut();
   $('#contactsPage').fadeIn();
+  if(!mapInited) {
+    initMap();
+    mapInited = true;
+  }
 }
 
+// Init index page 
 function initIndex () {
-  // Array of all media sorted in date order newest top
-    var mediaDatabase =  users.map(function (user) {
-        return user.getMyMedia();
-    }).reduce(function (acc, userMedia, index, arr) {
-      return acc.concat(userMedia);
-    }, []).sort(function (a, b) {
-      return b.created_time - a.created_time;
-    });
-    var l = mediaDatabase.length;
+// Array of all media sorted in date order newest top. mediaDatabase is used only on the
+// index page for making slider and mozaik
+  var mediaDatabase =  users.map(function (user) {
+      return user.getMyMedia();
+  }).reduce(function (acc, userMedia, index, arr) {
+    return acc.concat(userMedia);
+  }, []).sort(function (a, b) {
+    return b.created_time - a.created_time;
+  });
+  var l = mediaDatabase.length;
 //Number of images in slider
-    var sliderSize = 10;
-    
-//Get 10 random images for slider
-    var rand = Math.floor(Math.random() * l);
-    var sliderImages = [];
-    for(var i = 0; i < sliderSize && i < l; i++) {
-      sliderImages.push(mediaDatabase[(i + rand) % l].getImage('standard', 'slider__slide'));
-    }    
+  var sliderSize = 10;
 
-    var mySlider = new Slider($('#slider'), sliderImages);
-    
+//Get 10 random images for slider
+  var rand = Math.floor(Math.random() * l);
+  var sliderImages = [];
+  for(var i = 0; i < sliderSize && i < l; i++) {
+    sliderImages.push(mediaDatabase[(i + rand) % l].getImage('standard', 'slider__slide'));
+  }    
+
+  var mySlider = new Slider($('#slider'), sliderImages);
+
 // Get all images from databaise for mozaik
-    var mozaikImages = [];
-    
-    for(var i = 0; i < l; i++) {
-      mozaikImages.push(mediaDatabase[i].getImage('thumbnail', 'mozaik__image'));
-    }  
-    var myMozaik = new Mozaik($('.mozaik__container')[0], mozaikImages);
+  var mozaikImages = [];
+
+  for(var i = 0; i < l; i++) {
+    mozaikImages.push(mediaDatabase[i].getImage('thumbnail', 'mozaik__image'));
+  }  
+  var myMozaik = new Mozaik($('.mozaik__container')[0], mozaikImages);
 }
 
 function initMap () {
-  console.log('initMap');
   var mapCanvas = document.getElementById('map');
-    if($( window ).width() > 800) {
-      $(mapCanvas).css("width", $( window ).width() * 0.6);
-    }
-    else {
-      $(mapCanvas).css("width", $( window ).width() * 0.85);
-    }
+// Adjust the map container  according to window.width
+  if($( window ).width() > 800) {
+    $(mapCanvas).css("width", $( window ).width() * 0.6);
+  } else {
+    $(mapCanvas).css("width", $( window ).width() * 0.85);
+  }
   var myCenter = new google.maps.LatLng(50.4284415, 30.4766053);
   var mapOptions = {center: myCenter, zoom: 15};
   map1 = new google.maps.Map(mapCanvas, mapOptions);
@@ -117,14 +127,19 @@ function initMap () {
   });     
 }
 
+// When nobody is logged now and user click #nav-login 'login dialog flow' starts. 
+// This function maintain 'login dialog flow'
 function loginDialog () {
   var dialogForm = $('<form id="login-form" class="form" method="POST"  enctype="multipart/form-data" action="#">' +
     '<h5 class="form__head">Log into PhotoGallery</h5>' +
     '<p class="form__wrong"></p>' +
-    '<input type="text" id="login__username" name="username" class="form__input form__input_login" size="21"' +       'maxlength="50" placeholder="USERNAME" pattern="^\\w{6,20}$"  required>' +
-    '<input type="password" id="login__password" name="psw" class="form__input form__input_psw" size="21"' + 'maxlength="50" placeholder="PASSWORD" pattern="^\\w{6,20}$" required>' +
+    '<input type="text" id="login__username" name="username" class="form__input form__input_login" size="21"' +       
+    'maxlength="50" placeholder="USERNAME" pattern="^\\w{6,20}$"  required>' +
+    '<input type="password" id="login__password" name="psw"' + 
+    'class="form__input form__input_psw" size="21"' + 
+    'maxlength="50" placeholder="PASSWORD" pattern="^\\w{6,20}$" required>' +
     '<input type="submit" class="btn btn_large" value="Login">' +  
-    '<span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>' +      
+    '<span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>' + 
   '</form>');
   
   $('.dialog-window__content').html(dialogForm);
@@ -132,20 +147,22 @@ function loginDialog () {
   $('.dialog-window').fadeIn();
   
   $('#login-form').on('submit', function (evt) {
-  evt.preventDefault();
-// Take username and password from input field
-  var username = $('#login__username').val();
-  var password = $('#login__password').val();
-
-  if(makeLogin(username, password)) {
-    displayInfoWindow('You successfully logged in');
-    displayLoggedUser();
-  } else {
-    displayFormError('Wrong Login or Password');
-  }
-});
+    evt.preventDefault();
+  // Take username and password from input field
+    var username = $('#login__username').val();
+    var password = $('#login__password').val();
+// Check if username and password and then login the user or display error
+    if(makeLogin(username, password)) {
+      displayInfoWindow('You successfully logged in');
+      displayLoggedUser();
+    } else {
+      displayFormError('Wrong Login or Password');
+    }
+  });
 }
 
+// When some user is logged and click #nav-login 'logged dialog flow' starts. 
+// This function maintain 'loged dialog flow'
 function loggedDialog () {
   $('.dialog-window__content').html('<button id="loadPhoto" class="btn btn_large">Load Photo</button>' +
   '<button id="logOut" class="btn btn_large">Log out</button>' + 
@@ -220,9 +237,10 @@ function loadPhotoDialog () {
   });
 }
 
+
 function makeLogin (username, password) {
   var usr;
-// Searcvh for a user with such username
+// Search for a user with such username
   for(var i = 0; i < users.length; i++){
     if(users[i].username === username) {
       usr = users[i];
@@ -274,6 +292,7 @@ function displayNoLoggedUser () {
   $('.dialog-window').fadeOut();
 }
 
+// The first function which called when application started
 function startSPA () {
   // Setup router 
 var router = new Router();
@@ -282,10 +301,11 @@ router.route('all-photo', allPhotoFun);
 router.route('find', findFun);
 router.route('contacts', contactsFun);
 router.route('', indexFun);
+  
   $(document).ready(function () {
 //Start navigation logic in navbar
     navFun();
-    
+
 // Make correspondding make up in each containners using templates
     $('#indexPage').html(window.Templates.indexPage);
     $('#allPhotoPage').html(window.Templates.allPhotoPage);
@@ -298,9 +318,6 @@ router.route('', indexFun);
     allPhoto= new AllPhoto($(".all-photo")[0]); 
 // Make find 
     find = new Find($('.find')[0]);
-// Make map for contacts page
-    initMap();
-
     
 // Go to correct route when SPA starts
     if (window.location.hash == '') {

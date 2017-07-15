@@ -1,8 +1,12 @@
-function mediaContainer (target) {
+// MediaContainer class has two child AllPhoto and Find.
+// MediaContainer counstructor
+function MediaContainer (target) {
   this.target = target;
 }
 
-mediaContainer.prototype.resetCurrentDatabase = function () {
+// Take all media from each user concat then to one array and sort by date newest first
+// than save this array as a current database for 'this' MediaContainer
+MediaContainer.prototype.resetCurrentDatabase = function () {
   return users.map(function (user) {
     return user.getMyMedia();
   }).reduce(function (acc, userMedia, index, arr) {
@@ -12,8 +16,8 @@ mediaContainer.prototype.resetCurrentDatabase = function () {
   });
 }
 
-
-mediaContainer.prototype.showBigMedia = function (container, media) {
+// Decide what function call for displaying big media according to the media type ('image' or 'carousel')
+MediaContainer.prototype.showBigMedia = function (container, media) {
   if(media.type == 'carousel') {
     this.showBigCarousel(container, media);
   } else {
@@ -21,7 +25,8 @@ mediaContainer.prototype.showBigMedia = function (container, media) {
   }
 }
 
-mediaContainer.prototype.showBigImage = function (container, media) {
+//First argument is a jQuery element where the big image shpould be, media is a media object
+MediaContainer.prototype.showBigImage = function (container, media) {
   container.html('');
 // collect data from media obj
   var linkToImage = media.getImageAsLink('standard', 'bigMedia__link', 'bigMedia__image');
@@ -29,16 +34,18 @@ mediaContainer.prototype.showBigImage = function (container, media) {
   
 // Make jQuery elements for markup
   var bigMedia = $('<div class="bigMedia"></div>');
-  
+
   var figcaption = $('<figcaption class="bigMedia__figcaption"></figcaption>');
   var instagram = $('<a class="instagram bigMedia__control" href="' + linkToInstagram +'" target ="_blank">' + 
           '<img class="instagram__img" src="blocks/staff/img/instagram-logo.png" alt="instagram logo">' + 
         '</a>');
   var like = $('<span class="like bigMedia__control"></span>');
   var close = $('<span class="close">&#10005;</span>');
-  
+
+// Add jQuery data property which is 'pointer' to the to media object 
   like.data('media', media);
   like.html(media.likes.count);
+
   if(!media.user_has_liked) {
     like.addClass('like_active');
   }
@@ -66,19 +73,20 @@ mediaContainer.prototype.showBigImage = function (container, media) {
   container.append(bigMedia);
 }
 
-mediaContainer.prototype.showBigCarousel = function (container, media) {
+// Use slider class for making big media with 'carouse' type
+MediaContainer.prototype.showBigCarousel = function (container, media) {
   container.html('');
 // get images for slider
-   var images = media.getCarouselImageAsLinks('slider__slide', 'slider__img');
-   var s = new Slider(container, images);
+  var images = media.getCarouselImageAsLinks('slider__slide', 'slider__img');
+  var s = new Slider(container, images);
   var close = $('<span class="close">&#10005;</span>');
   
-    var linkToInstagram = media.link;
-    var slider = container.children('.slider');
-    var figcaption = $('<figcaption class="bigMedia__figcaption"></figcaption>');
-    var instagram = $('<a class="instagram bigMedia__control" href="' + linkToInstagram +'" target ="_blank">' + 
-          '<img class="instagram__img" src="blocks/staff/img/instagram-logo.png" alt="instagram logo">' + 
-        '</a>');
+  var linkToInstagram = media.link;
+  var slider = container.children('.slider');
+  var figcaption = $('<figcaption class="bigMedia__figcaption"></figcaption>');
+  var instagram = $('<a class="instagram bigMedia__control" href="' + linkToInstagram +'" target ="_blank">' + 
+        '<img class="instagram__img" src="blocks/staff/img/instagram-logo.png" alt="instagram logo">' + 
+      '</a>');
   var like = $('<span class="like bigMedia__control"></span>');
   var close = $('<span class="close">&#10005;</span>');
   
@@ -108,18 +116,18 @@ mediaContainer.prototype.showBigCarousel = function (container, media) {
   
 } 
 
-//------------------- MEDIACONTAINER END ------------------------
+//------------------- MediaContainer END ------------------------
 // ------------------- ALLPHOTO --------------------------------------
 function AllPhoto(target) {
-  mediaContainer.call(this, target);
+  MediaContainer.call(this, target);
   var _this = this;
 // Make media's database 
   this.database = this.resetCurrentDatabase();
   this.lastItDisplayed = undefined;
-  this._addItems();
-
+  this.addItems();
+//Display new images when button 'Load more' is clicked
   $("#load-more").on("click", function(evt){
-    _this._addItems();
+    _this.addItems();
   });
 
   $('.all-photo').on('click', function (evt) {
@@ -128,17 +136,19 @@ function AllPhoto(target) {
   });
 }
 
-AllPhoto.prototype = Object.create(mediaContainer.prototype);
+AllPhoto.prototype = Object.create(MediaContainer.prototype);
 AllPhoto.prototype.constructor = AllPhoto;
 
 // This function called when user adds photo for displaying correct database
 AllPhoto.prototype.refresh = function () {
   this.database = this.resetCurrentDatabase();
   $(this.target).html('');
-  this._addItems(true); 
+  this.addItems(true); 
 }
 
-AllPhoto.prototype._addItems = function(refresh) {
+// refresh argument may be a true or false, when user add new photo and we need to refresh allPhoto page 
+// refresh is needed
+AllPhoto.prototype.addItems = function(refresh) {
   var firstItem;
   if(this.database.length == 0){
     console.log("No data loaded");
@@ -148,20 +158,19 @@ AllPhoto.prototype._addItems = function(refresh) {
     if(this.lastItDisplayed === undefined) {
       firstItem = 0;
       this.lastItDisplayed = 5;
-    }
-    else{
+    } else {
       firstItem = this.lastItDisplayed + 1;
-      this.lastItDisplayed = this.lastItDisplayed + 6;
+      this.lastItDisplayed = this.lastItDisplayed + 6; // 6 is a number of photo to add each time
     }
     if(this.lastItDisplayed > this.database.length -1) {
       this.lastItDisplayed = this.database.length - 1;
       $("#load-more").attr("disabled", true);
     }
-  } else {
+  } else { // if refresh add all items from 0 to lastItDisplayed
     firstItem = 0;
   }
   for(var i = firstItem; i <= this.lastItDisplayed; i++) {
-    if(this.database[i].type == 'carousel') {
+    if(this.database[i].type == 'carousel') { // carousel has spec symbol on the right top
       $('<figure class="all-photo__item"><img src="blocks/staff/img/carousel-icon-white.png"' + 
         'alt="carousel icon" class="carousel-icon">' + 
           this.database[i].getImage('low', 'all-photo__img') +  
@@ -185,7 +194,7 @@ AllPhoto.prototype._addItems = function(refresh) {
 
 function Find(target) {
   var _this = this;
-  mediaContainer.call(this, target);
+  MediaContainer.call(this, target);
 
 // currentDatabase is a list of media to display, at this moment it is all user's media 
   this.currentDatabase = this.resetCurrentDatabase(); 
@@ -223,16 +232,14 @@ function Find(target) {
   $('#reset').on('click', function() {
     _this.reset();
   });
-
+// First bu default set autocomplete source to usernames array
   this.autoCompleteArr = this.usernames;
   this.NoResultsLabel = 'No Results';
   _this.NoResultsFlag = false;
+// adjust jQUery autocomplete
   $('#search').autocomplete({
     source: function(request, response) {
-      var results = $.ui.autocomplete.filter(
-        _this.autoCompleteArr,
-        request.term
-      );
+      var results = $.ui.autocomplete.filter(_this.autoCompleteArr, request.term);
       if (!results.length) {
         results = [_this.NoResultsLabel];
         _this.NoResultsFlag = true;
@@ -253,6 +260,7 @@ function Find(target) {
     }
   });
 
+// Set the autocomplete source depends on whether user enter '#' 
   $('#search').keyup(function(e) {
     var inputHasHash = /^#/.test($(this).val());
     if (_this.autoCompleteSource == 'usernames' && inputHasHash) {
@@ -265,6 +273,7 @@ function Find(target) {
     }
   });
 
+// User can press entr or click the 'Find' button for searching
   $('#search').on('change', function(evt) {
     _this._find(evt);
   });
@@ -274,18 +283,19 @@ function Find(target) {
   });
 }
 
-Find.prototype = Object.create(mediaContainer.prototype);
+Find.prototype = Object.create(MediaContainer.prototype);
 Find.prototype.constructor = Find;
 
-
+// Page is an integer it is a page number for displaying
 Find.prototype._showPage = function(page) {
   //Clear page
   $(this.target).html('');
-
-  if (this.currentDatabase.length === 0) {
+// Hide pagination if we have less than 2 page of results
+  if (this.currentDatabase.length <= 1) {
     $('.pag').fadeOut();
     return;
   }
+// Range of item to display on current page from start to end
   var start = this.itemsOnPage * page;
   var end = start + this.itemsOnPage;
   // Check if we reach end of the database
@@ -299,18 +309,11 @@ Find.prototype._showPage = function(page) {
   }
 
   for (var i = start; i < end; i++) {
-//    $(
-//      "<figure class='find__item'><img class='find__img' src=" +
-//        this.currentDatabase[i].getImageLink('standard') + " alt='" + this.currentDatabase[i].getTags().join(' ') +
-//        "'></figure>"
-//    ).appendTo(this.find);
     var item = $('<div class="find__item"></div>');
-  
     $(this.target).append(item);
         this.showBigMedia(item, this.currentDatabase[i]);
-
-
   }
+// Remove all close buttons in search results
   $('.close').remove();
   this._adjustPag(page);
 };
@@ -368,7 +371,7 @@ Find.prototype._adjustPag = function(page) {
         pageAfter = $('#page-' + (page + i));
       }
     }
-
+// Add dots ... if there are more page then are displayed in pagination
     if (parseInt($(pageAfter).html()) - 1 < lastPage) {
       pageAfter.after(
         "<button class='pag__page pag__page_gotoPage' disabled>...</button>"
@@ -432,6 +435,7 @@ Find.prototype.reset = function() {
   this.infoUser.fadeOut();
 };
 
+//Make a list of all hashtags presented in all media oh alll users
 Find.prototype.takeHashTags = function() {
   var data = this.currentDatabase;
   var hashTags = [];
@@ -449,19 +453,21 @@ Find.prototype.takeHashTags = function() {
   return hashTags;
 };
 
-Find.prototype._displayTag = function(evt) {
+// Display all media which has hash tag.
+Find.prototype._displayTag = function() {
   this.infoUser.fadeOut();
   this.infoTag.fadeIn();
   $('.info__user').fadeOut();
   $('input:checkbox[name=order]').prop('checked', false);
   $('option').prop('selected', false);
+// Remove first letter form o search query (this should be '#' symbol)
   var text = $('#search').val().slice(1);
   this.currentDatabase = []; 
 
+// Make currentDatabase with media which has give tag
   var base = users.map(function (user) {
     return user.getMediaWithTag(text);
   });
-
   base.forEach(function (el) {
     if(el.length > 0) {
       this.currentDatabase = this.currentDatabase.concat(el);
@@ -470,6 +476,7 @@ Find.prototype._displayTag = function(evt) {
 
   this._sortBy();
   this._showPage(0);
+//If there are media with given tag display info 
   if ( this.currentDatabase.length > 0) {
     $('.info__hash').html('#' + text);
     $('.info__tag-info').html(String(this.currentDatabase.length) + ' photos');

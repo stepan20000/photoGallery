@@ -25,7 +25,7 @@ function navFun() {
       loginDialog();
     }
   });
-  
+// Event listener for closing of the dialog window  
   $('.dialog-window').on('click', function (evt) {
     switch(evt.target) {
       case $('#dialog-window-close')[0]:

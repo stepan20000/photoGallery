@@ -9,16 +9,122 @@
   <meta name="author" content="Stepan Yefimov" >
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  
+  <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet">
   <script
     src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
+  <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   
-  <link href="styles/style.css" rel="stylesheet"> 
-  <script src="blocks/nav/nav.js"></script>
+  <script src="scripts/lodash.js"></script> 
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjeLv8h0aMMHv6Oi3PBo1B5FYL20rHiNc"
+  async defer></script> 
+  
+  <script type="text/template" data-name="indexPage">
+    <div id="slider"></div> 
+    <div class="mozaik">
+      <h3 class="mozaik__head">Many Thumbnails</h3>
+      <div class="mozaik__wrapper">
+        <div class="mozaik__container">
+        </div>
+      </div>
+    </div>
+  </script>
+  
+  <script type="text/template" data-name="allPhotoPage">
+    <div class="all-photo"></div>
+      <div class="control">
+        <button id="load-more" class="btn">Load more</button>
+      </div>
+      <div id="bigMediaContainer"></div>
+    </div>
+  </script>
+  
+  <script type="text/template" data-name="findPage">
+     <div class="control control_top">
+      <ul class="control__controls">
+        <li class="control__item">
+          <span>Sort by:</span>       
+          <select id="sort-by" class="select" autocomplete="off">
+            <option value="date" selected>Date</option>
+            <option value="likes">Likes</option>
+          </select>
+        </li>
+        <li class="control__item">
+          <span>Order:</span>
+          <input type="checkbox" class="checkbox" id="order" name="order">
+          <label for="order" class="checkbox__label checkbox__label_order"></label>
+        </li>
+        <li class="control__item">
+          <input type="text" id="search" class="search" placeholder="Search..">
+        </li>
+        <li class="control__item">
+          <button id="search-btn" class="btn">Find</button>
+          <button id="reset" class="btn">Reset</button>
+        </li>
+      </ul>
+    </div>
+    <section class="info">
+      <div class="info__tag">
+        <h3 class="info__hash"></h3>
+        <p class="info__tag-info"></p>
+      </div>
+      <div class="info__user clearfix">
+        <div class="info__user-avatar"><img class="info__user-img" src="" alt=""></div>
+        <div class="info__user-info">
+          <h2 class="info__username info__user-item"></h2>
+          <h4 class="info__name info__user-item"></h4>
+          <p class="info__photos info__user-item"></p>
+        </div>
+      </div>
+    </section>
+    <div class="find"></div>
+    <div class="pag clearfix">
+      <button id="page-start" class="pag__page pag__page_out">&laquo;</button>
+      <button id="page-prev" class="pag__page">&lt; Prev.</button>
+      <button id="page-current" class="pag__page pag__page_current" disabled></button>
+      <button id="page-next" class="pag__page">Next &gt;</button>
+      <button id="page-end" class="pag__page pag__page_out">&raquo;</button>
+    </div>
+  </script>  
+  <script type="text/template" data-name="contactsPage">
+      <h2 class="contacts__head">Contact Information</h2>
+      <div class="contacts__container"> 
+        <div class="contacts__map" id="map" ></div>
+        <div class="contacts__info">
+          <h4>State University of Telecommunications</h4>
+          <address class="contacts__address">
+            <p>03680, Kyiv, Solomenska street, 7</p>
+            <p>+38 (044) 248-85-69</p>
+            <p>info@dut.edu.ua</p>
+          </address>
+        </div>
+      </div>
+  </script>
+
+  <script>
+    window.Templates = (function() {
+      var templateElements = document.querySelectorAll('script[type="text/template"]');
+      var compiledTemplates = {};
+      Array.prototype.forEach.call(templateElements, function(templateElement) {
+        var templateName = templateElement.getAttribute('data-name');
+        var templateString = templateElement.innerHTML;
+        compiledTemplates[templateName] = _.template(templateString);
+      });
+      return compiledTemplates;
+    })();
+  </script>
+  
+  <link href="styles/style.css" rel="stylesheet">
+  <script src="scripts/nav.js"></script>
   <script src="scripts/get-data.js"></script>
   <script src="scripts/imageSet.js"></script>
-  <script src="scripts/index.js"></script>
+  <script src="scripts/mediaContainer.js"></script>
+  <script src="scripts/router.js"></script>
+  <script src="scripts/indexSPA.js"></script>
+
   
 </head>
 <body>
@@ -26,15 +132,17 @@
     <section class="nav">
       <div class="nav__container">
         <h1 class="nav__brand">
-          <a class="nav__brand-link" href="index.html">Logo</a>
+          <a class="nav__brand-link" href="#index">Logo</a>
         </h1>
         <nav class="nav__body">
           <div class="nav__mobile">
-            <a id="nav-toggle" href="#!"><span></span></a>
+            <a id="nav-toggle"><span></span></a>
           </div>
           <ul class="nav__list">
-            <li class="nav__list-li"><a class="nav__link nav__link_current">Home</a></li>
-            <li class="nav__list-li"><a class="nav__link" href="#!">About</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#index">Home</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#all-photo">All Photo</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#find">Search</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#contacts">Contacts</a></li>
             <li class="nav__list-li"><a class="nav__link" href="#!">Services</a>
               <ul class="nav__dropdown nav__list nav__list_dropdown">
                 <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Service 1</a></li>
@@ -42,24 +150,30 @@
                 <li class="nav__list-dropdown"><a class="nav__link nav__link_dropdown" href="#!">Service 3</a></li>
               </ul>
             </li>
-            <li class="nav__list-li"><a class="nav__link" href="all-photo.html">All Photo</a></li>
-            <li class="nav__list-li"><a class="nav__link" href="find.html">Find</a></li>
-            <li class="nav__list-li"><a class="nav__link" href="contacts.html">Contacts</a></li>
+            <li class="nav__list-li"><a id="nav-login" class="nav__link nav__link_login">Log in</a></li>
           </ul>
         </nav>
       </div>
     </section> 
   </header> 
-  <div class="content">
-    <div id="slider"></div> 
-    <div class="mozaik">
-      <h3 class="mozaik__head">Many Thumbnails</h3>
-      <div class="mozaik__wrapper">
-        <div class="mozaik__container">
-          <!--content from js -->
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="indexPage" class="content"></div>
+  <div id="allPhotoPage" class="content"></div>
+  <div id="findPage" class="content"></div>
+  <div id="contactsPage" class="content"></div>
+  
+  
+<!-- ------------------------ Dialog --------------------- -->
+  <section class="dialog-window">
+    <div class="dialog-window__content"></div>
+<!--
+    <form id="login-form" class="form" action="#">
+      <h5 class="form__head">Log into PhotoGallery</h5>
+      <p class="form__wrong">Wrong Login or Password</p>
+      <input type="text" id="login__username" name="username" class="form__input form__input_login" size="21" maxlength="50" placeholder="USERNAME" pattern="^\w{6,20}$"  required>
+      <input type="password" id="login__password" name="psw" class="form__input form__input_psw" size="21" maxlength="50" placeholder="PASSWORD" pattern="^\w{6,20}$" required>
+      <input type="submit" class="btn btn_large" value="Login">  
+      <span id="dialog-window-close" href="#" class="close" title="Close login form">✕</span>      
+    </form> -->
+  </section>
 </body>
 </html>

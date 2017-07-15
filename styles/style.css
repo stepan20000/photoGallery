@@ -183,6 +183,9 @@
     display: inline-block;
     cursor: pointer;
     margin: 10px 3px; }
+    .slider__badge_small {
+      padding: 2px;
+      margin: 10px 2px; }
   .slider__badge:hover {
     background-color: wheat; }
   .slider__badge_active {
@@ -259,7 +262,8 @@
     text-align: center;
     padding-left: 40px;
     box-sizing: border-box;
-    background-color: rgba(10, 10, 10, 0.7); }
+    background-color: rgba(10, 10, 10, 0.7);
+    z-index: 5; }
 
 @media screen and (max-width: 1000px) {
   .all-photo {
@@ -454,7 +458,8 @@
   top: 10px;
   right: 10px;
   border-radius: 6px;
-  background-color: black; }
+  background-color: black;
+  z-index: 5; }
 
 .ui-autocomplete {
   max-height: 250px;
