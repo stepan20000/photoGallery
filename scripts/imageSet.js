@@ -4,7 +4,6 @@ function ImagesSet (target, images) {
   this.target  = target;
   this.images = images;
   this.l = images.length;
-  console.log(users);
 }
 
 ImagesSet.prototype.addImages = function(target) {

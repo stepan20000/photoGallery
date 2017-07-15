@@ -1,36 +1,9 @@
-//ID's of users who gave access to their accounts
-var userIds = [5604673568, 5611812646, 5612036694, 5617349057, 222066133];
-// Instagram's access token
-var token = '5604673568.7436976.80a61fbf539244dbab7f434b32ece141';
-// In Sandbox mode we can only load maximum 20 media per request
-var numPhotos = 20;
-//The interval after which the data is considered to be obsolete and loaded again (30 min)
-var relevanceInterval = 1800000;
-// The array with user's info and media obtained from instagram API
-var users;
-//loggedUser is a refference to the user object which is logged in now
-var loggedUser = false;
-
-//Save users[] with all data to the session storage and also add timestamp for detecting when data is expired
-function saveUsersData(data) {
-  if (typeof(Storage) !== "undefined") {
-    sessionStorage.setItem("photoAlbumData", JSON.stringify(data));
-    sessionStorage.setItem("timestamp", String(Date.now()));
-  } 
-  else {
-    alert("Sorry! No Web Storage support..");
-    return;
-  }
-}
-
-
-
 // -------------------- USER --------------------------------------
-function User (id) {
+function MyUser (id) {
   this.id = id;
 }
 
-User.prototype.takeMyInfo = function () {
+MyUser.prototype.takeMyInfo = function () {
   return $.ajax({
     url: 'https://api.instagram.com/v1/users/' + this.id,
     dataType: 'jsonp',
@@ -39,7 +12,7 @@ User.prototype.takeMyInfo = function () {
   });
 }
 
-User.prototype.saveMyInfo = function (data) {
+MyUser.prototype.saveMyInfo = function (data) {
   var keys = Object.keys(data.data);
   for(var i in keys) {
     this[keys[i]] = data.data[keys[i]];
@@ -47,7 +20,7 @@ User.prototype.saveMyInfo = function (data) {
   this.psw = this.username + 'psw';
 }
 
-User.prototype.takeMyMedias = function () {
+MyUser.prototype.takeMyMedias = function () {
   return $.ajax({
     url: 'https://api.instagram.com/v1/users/' + this.id + '/media/recent',
     dataType: 'jsonp',
@@ -56,36 +29,79 @@ User.prototype.takeMyMedias = function () {
   });
 }
 
-User.prototype.saveMyMedias = function (data) {
+MyUser.prototype.saveMyMedias = function (data) {
   this._mediaList = data.data;
   this._mediaList.forEach(function (el) {
     if(el.type == 'carousel') {
       Object.setPrototypeOf(el, Carousel.prototype);
     }
     else if(el.type == 'image') {
-      Object.setPrototypeOf(el, Image.prototype);
+      Object.setPrototypeOf(el, MyImage.prototype);
     } 
   });
 }
 
-User.prototype.getMyMedia = function () {
+MyUser.prototype.getMyMedia = function () {
   return this._mediaList;
 }
 
-User.prototype.getMediaWithTag = function (tag) {
+MyUser.prototype.getMediaWithTag = function (tag) {
   return this._mediaList.filter(function (media) {
     return media.tags.some(function (el) {
       return el == tag;
     });
   });
 }
+
+MyUser.prototype.addMedia = function (newMediaDesc, newMediaSrc) {
+    this._mediaList.push(new MyImage(newMediaDesc, newMediaSrc));
+}
                                 
 // ------------------------- END USER --------------------------------
 
 // ------------------------- MEDIA ----------------------------------
 
-function Media (media) {
+function Media (newMediaDesc, newMediaSrc) {
 
+// Construct a new image object 
+  this.id = Math.floor(Math.random() * 9999999999999999999) + '_' + loggedUser.id;
+  this.user = {'id': loggedUser.id, 
+               'full_name': loggedUser.full_name, 
+               'profile_picture': loggedDialog.profile_picture,
+               'username': loggedUser.username
+              };
+  this.images = {
+    'thumbnail':{ 'width':150, 'height':150, 'url': newMediaSrc // fill url
+      },
+    'low_resolution':{
+      'width':320,'height':400,'url': newMediaSrc // fill url
+      },
+    'standard_resolution':{
+      'width':640,'height':800,'url': newMediaSrc // fill url
+      }
+    };
+  this.created_time = Date.now();
+  this.caption = {
+    'id':'',
+    'text': newMediaDesc, // The text entered by user while added image  newMediaDesc
+    'created_time': Date.now(), // Date.now()
+    'from':{'id': loggedUser.id, // fill user info again 
+      'full_name': loggedUser.full_name,
+      'profile_picture': loggedDialog.profile_picture,
+      'username': loggedUser.username
+     }
+  };
+  this.user_has_liked = false;
+  this.likes = {'count': 0 };
+  this.filter = 'Normal';
+  this.comments = {'count': 0};
+  this.link = 'https://www.instagram.com';
+  this.location = null;
+  this.attribution = null;
+  this.users_in_photo = [];
+  this.tags = newMediaDesc.match(/#\w+/g) ? newMediaDesc.match(/#\w+/g).map(function (tag) {
+    return tag.slice(1);
+  }) : [];
 }
 
 Media.prototype.getImage = function (size, classImg) {
@@ -100,6 +116,8 @@ Media.prototype.getImage = function (size, classImg) {
       break;
     case 'thumbnail':
       src =  this.images.thumbnail.url;
+      return '<div class="mozaik__one"><img class="' + classImg + '" src="' + src + 
+        '" alt="' + alt + '"</div>';
       break;
     default:
       src =  this.images.standard_resolution.url;
@@ -118,12 +136,10 @@ Media.prototype.getImageAsLink = function (size, classA, classImg) {
 }
 
 Media.prototype.setLike = function (el) {
-  console.log('set like');
   var _this = this;
   $(el).removeClass('like_active');
   _this.user_has_liked = true;
   $(el).html(++this.likes.count);
-  console.log('setLike', el);
   $.ajax({
     url: 'https://api.instagram.com/v1/media/' + _this.id + '/likes',
     dataType: "json",
@@ -141,11 +157,9 @@ Media.prototype.setLike = function (el) {
   
 Media.prototype.removeLike = function (el) {
   var _this = this;
-  console.log('remove like');
   $(el).addClass('like_active');
   this.user_has_liked = false;
   $(el).html(--this.likes.count);
-  console.log('removeLike', el);
   $.ajax({
     url: 'https://api.instagram.com/v1/media/' + _this.id + '/likes',
     dataType: "json",
@@ -173,12 +187,25 @@ Media.prototype.makeLike = function () {
 // ------------------------- IMAGE ------------------------------------
 
 
-function Image () {
-  Media.call(this);
+function MyImage (newMediaDesc, newMediaSrc) {
+
+  Media.call(this, newMediaDesc, newMediaSrc);
+  this.type = 'image';
+  
+  //Store new media obj in a localStorage
+  if(localStorage[loggedUser.id]) {
+    var storedUser = JSON.parse(localStorage[loggedUser.id]);
+    storedUser.push(this);
+    localStorage.removeItem(loggedUser.id);
+    localStorage.setItem(loggedUser.id, JSON.stringify(storedUser));
+  } else {
+    var storedUser = [this];
+    localStorage.setItem(loggedUser.id, JSON.stringify(storedUser));
+  }
 }
 
-Image.prototype = Object.create(Media.prototype);
-Image.prototype.constructor = Image;
+MyImage.prototype = Object.create(Media.prototype);
+MyImage.prototype.constructor = MyImage;
 
 
 // ------------------------- END IMAGE --------------------------------
@@ -204,7 +231,6 @@ Carousel.prototype.getCarouselImageAsLinks = function (classA, classImg) {
 
 // Request all neaded data and call given function when data is reseived
 function getData (fun) {
-  console.log('getdata');
   Promise.all( users.map(function (x) {
     return Promise.resolve(x.takeMyInfo()).then(
       function (data) {
@@ -212,6 +238,9 @@ function getData (fun) {
         return Promise.resolve(x.takeMyMedias());
       }).then(
       function (data) {
+        if(localStorage[x.id]) {
+        data.data = data.data.concat(JSON.parse(localStorage[x.id]));
+        }
         x.saveMyMedias(data);
         return x;
       }
@@ -219,38 +248,10 @@ function getData (fun) {
   })).then(
     function (data) {
       console.log(users);
-      saveUsersData(users);
       fun();
     }
   ).catch(function (err) {
     alert('Can not load data');
+    console.log(err);
   });
 }
-
-// This function fills users aray with data from instagram or session.Storage. If there are no data in session.Storage
-// or it is expired (older than elevanceInterva) if calls getData function
-function start (fun) {
-  if(Number(sessionStorage.timestamp) > Date.now() - relevanceInterval){
-    users = JSON.parse(sessionStorage.photoAlbumData);
-    users.forEach(function (user) {
-      Object.setPrototypeOf(user, User.prototype);
-      user.getMyMedia().forEach(function (media){
-        if(media.type == 'carousel') {
-          Object.setPrototypeOf(media, Carousel.prototype);
-        }
-        else if(media.type == 'image') {
-          Object.setPrototypeOf(media, Image.prototype);
-        } 
-      });
-    });
-    
-    fun();
-  }
-  else{
-    return getData(fun);
-  }
-}
-// Take a array with user's ids and create corresponding objects
-users = userIds.map(function (id) {
-  return new User(id);
-});

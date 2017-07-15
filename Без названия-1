@@ -1,0 +1,27 @@
+Загрузка фото
+
+- клик на кнопке Load Photo
+  input file 
+  fields 
+    input from user 
+      #tags
+    
+    data from computer
+      created_time
+      id
+      images
+        low_resolution.url
+        standard_resolution.url
+        thumbnail.url
+      likes.count
+      link "?????????????"
+      user - loggedUser
+      user_has_liked
+      
+      
+        displaySuccesWindow('You successfully logged in');
+
+        
+        
+    
+    

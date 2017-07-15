@@ -46,7 +46,7 @@
   border: 2px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  background-image: url(../blocks/content/img/search-icon.png);
+  background-image: url(../blocks/staff/img/search-icon.png);
   background-position: 4px 6px; 
   background-repeat: no-repeat;
   padding: 12px 20px 12px 40px;
@@ -72,6 +72,7 @@
     width: 80%;
     display: block;
     margin: auto;
+    max-width: 200px;
   }
 }
 
@@ -97,6 +98,7 @@
       color: white;
       border: 1px solid whitesmoke;
       font-weight: bold;
+      background-color: black;
     }
     
     &:disabled {
@@ -305,7 +307,7 @@
 
 .ui-autocomplete {
   max-height: 250px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 // ------------------------------------- LOGIN ---------------------
@@ -329,6 +331,11 @@
     background-color: rgba(177, 187, 189, 0.9);
     border-radius: 20px;
     position: relative;
+    
+    &_large {
+      width: 60%;
+      max-width: 600px;
+    }
   }
 }
 // --------------------------------------- LOGIN END ------------------------
@@ -344,9 +351,29 @@
     border-radius: 8px;
     border: 2px solid grey;
     background-color: rgb(249, 245, 243);
+    max-width: 300px;
+    
+    &_textarea {
+      max-width: 800px;
+    }
+    
+    &_file {
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      background-color: transparent;
+      max-width: 800px;
+      
+    } 
   }
   
-    &__input::placeholder {
+  &__instruction {
+    max-width: 800px;
+    width: 80%;
+    margin: 10px auto;
+  }
+  
+  &__input::placeholder {
     font-family:  sans-serif;
     font-style: italic;
     font-size: 13px;
@@ -378,6 +405,15 @@
 #login__username:valid ~ #login__password:valid ~ input[type="submit"] {
   visibility: visible;
 }
+
+
+.content {
+  padding-left: 20px;
+  padding-right:  20px; 
+  height: calc(100vh - 85px);
+  overflow: scroll;
+}
+
 
 // --------------------------------------- FORM END -------------------------
 

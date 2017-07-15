@@ -108,17 +108,13 @@ mediaContainer.prototype.showBigCarousel = function (container, media) {
   
 } 
 
-
-
 //------------------- MEDIACONTAINER END ------------------------
 // ------------------- ALLPHOTO --------------------------------------
-function AllPhoto(target){
+function AllPhoto(target) {
   mediaContainer.call(this, target);
   var _this = this;
 // Make media's database 
   this.database = this.resetCurrentDatabase();
-  console.log(users);
-  console.log(this.database);
   this.lastItDisplayed = undefined;
   this._addItems();
 
@@ -135,23 +131,34 @@ function AllPhoto(target){
 AllPhoto.prototype = Object.create(mediaContainer.prototype);
 AllPhoto.prototype.constructor = AllPhoto;
 
-AllPhoto.prototype._addItems = function() {
+// This function called when user adds photo for displaying correct database
+AllPhoto.prototype.refresh = function () {
+  this.database = this.resetCurrentDatabase();
+  $(this.target).html('');
+  this._addItems(true); 
+}
+
+AllPhoto.prototype._addItems = function(refresh) {
+  var firstItem;
   if(this.database.length == 0){
     console.log("No data loaded");
     return;
   }
-  var firstItem;
-  if(this.lastItDisplayed === undefined) {
+  if(!refresh) {
+    if(this.lastItDisplayed === undefined) {
+      firstItem = 0;
+      this.lastItDisplayed = 5;
+    }
+    else{
+      firstItem = this.lastItDisplayed + 1;
+      this.lastItDisplayed = this.lastItDisplayed + 6;
+    }
+    if(this.lastItDisplayed > this.database.length -1) {
+      this.lastItDisplayed = this.database.length - 1;
+      $("#load-more").attr("disabled", true);
+    }
+  } else {
     firstItem = 0;
-    this.lastItDisplayed = 5;
-  }
-  else{
-    firstItem = this.lastItDisplayed + 1;
-    this.lastItDisplayed = this.lastItDisplayed + 6;
-  }
-  if(this.lastItDisplayed > this.database.length -1) {
-    this.lastItDisplayed = this.database.length - 1;
-    $("#load-more").attr("disabled", true);
   }
   for(var i = firstItem; i <= this.lastItDisplayed; i++) {
     if(this.database[i].type == 'carousel') {
@@ -182,19 +189,21 @@ function Find(target) {
 
 // currentDatabase is a list of media to display, at this moment it is all user's media 
   this.currentDatabase = this.resetCurrentDatabase(); 
+// This is a ufo windows for displaying info when searching for tag or for user
   this.infoTag = $('.info__tag');
   this.infoUser = $('.info__user');
 
   this.pageShown = 0;
   this.itemsOnPage = 5;
   this.mql = window.matchMedia('all and (min-width: 768px)');
-
+// Two arrays with all hashgs and usernames used as different autocomplete source
   this.hashTags = this.takeHashTags();
   this.usernames = users.map(function (user) {
     return user.username;
   });
+// This is like flag for indication what is the source for autocomplete now
   this.autoCompleteSource = 'usernames';
-
+//Show first page of full database media
   this._showPage(0);
 
   $('.pag').on('click', function(evt) {
@@ -416,6 +425,7 @@ Find.prototype._sortBy = function(evt) {
 Find.prototype.reset = function() {
   $('input:checkbox[name=order]').prop('checked', false);
   $('option').prop('selected', false);
+   $('#search').val('');
   this.currentDatabase = this.resetCurrentDatabase();
   this._showPage(0);
   this.infoTag.fadeOut();

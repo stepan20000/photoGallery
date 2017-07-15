@@ -244,7 +244,11 @@
     .all-photo__item:hover .all-photo__mask {
       top: 0; }
   .all-photo__img {
-    height: 100%; }
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    left: -9999px;
+    right: -9999px; }
   .all-photo__mask {
     position: absolute;
     width: 100%;
@@ -260,12 +264,6 @@
 @media screen and (max-width: 1000px) {
   .all-photo {
     justify-content: space-around; } }
-.content {
-  padding-left: 20px;
-  padding-right: 20px;
-  height: calc(100vh - 85px);
-  overflow: scroll; }
-
 .control {
   text-align: center; }
   .control__controls {
@@ -295,7 +293,7 @@
   border: 2px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  background-image: url(../blocks/content/img/search-icon.png);
+  background-image: url(../blocks/staff/img/search-icon.png);
   background-position: 4px 6px;
   background-repeat: no-repeat;
   padding: 12px 20px 12px 40px;
@@ -313,7 +311,8 @@
   .btn_large {
     width: 80%;
     display: block;
-    margin: auto; }
+    margin: auto;
+    max-width: 200px; }
 
 .pag {
   display: flex;
@@ -330,7 +329,8 @@
     .pag__page_current {
       color: white;
       border: 1px solid whitesmoke;
-      font-weight: bold; }
+      font-weight: bold;
+      background-color: black; }
     .pag__page:disabled {
       cursor: default; }
     .pag__page:disabled:not(.pag__page_current):not(.pag__page_gotoPage) {
@@ -458,7 +458,7 @@
 
 .ui-autocomplete {
   max-height: 250px;
-  overflow: hidden; }
+  overflow: scroll; }
 
 .dialog-window {
   display: none;
@@ -477,6 +477,9 @@
     background-color: rgba(177, 187, 189, 0.9);
     border-radius: 20px;
     position: relative; }
+    .dialog-window__content_large {
+      width: 60%;
+      max-width: 600px; }
 
 .form__input {
   display: block;
@@ -486,7 +489,20 @@
   margin: 20px auto;
   border-radius: 8px;
   border: 2px solid grey;
-  background-color: #f9f5f3; }
+  background-color: #f9f5f3;
+  max-width: 300px; }
+  .form__input_textarea {
+    max-width: 800px; }
+  .form__input_file {
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background-color: transparent;
+    max-width: 800px; }
+.form__instruction {
+  max-width: 800px;
+  width: 80%;
+  margin: 10px auto; }
 .form__input::placeholder {
   font-family: sans-serif;
   font-style: italic;
@@ -511,6 +527,12 @@
 
 #login__username:valid ~ #login__password:valid ~ input[type="submit"] {
   visibility: visible; }
+
+.content {
+  padding-left: 20px;
+  padding-right: 20px;
+  height: calc(100vh - 85px);
+  overflow: scroll; }
 
 @media only screen and (max-width: 768px) {
   .pag__page {
@@ -544,9 +566,18 @@
   max-height: 500px; }
 .mozaik__item {
   margin: 5px; }
-.mozaik__image {
+.mozaik__one {
+  overflow: hidden;
+  height: 100px;
   width: 100px;
-  margin: 2px; }
+  margin: 2px;
+  position: relative; }
+.mozaik__image {
+  height: 100%;
+  margin: auto;
+  position: absolute;
+  left: -9999px;
+  right: -9999px; }
 .mozaik__head {
   text-align: center; }
 

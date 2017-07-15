@@ -22,6 +22,10 @@
   
   &__img {
     height: 100%;
+    margin: auto;
+    position: absolute;
+    left: -9999px;
+    right: -9999px;
   }
   
   &__mask {

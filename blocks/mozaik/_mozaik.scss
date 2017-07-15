@@ -20,12 +20,22 @@ $mozaik-size: 100px;
   
   &__item {
     margin: 5px;
-
+  }
+  
+  &__one {
+    overflow: hidden;
+    height: $mozaik-size;
+    width: $mozaik-size;
+    margin: 2px;
+    position: relative;
   }
   
   &__image {
-    width: $mozaik-size;
-    margin: 2px;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    left: -9999px;
+    right: -9999px;
   }
   
   &__head {
