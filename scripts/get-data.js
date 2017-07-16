@@ -1,6 +1,6 @@
 // -------------------- USER --------------------------------------
 // Constructor for user's object
-function MyUser (id) {
+function MyUser(id) {
   this.id = id;
 }
 
@@ -12,12 +12,12 @@ MyUser.prototype.takeMyInfo = function () {
     type: 'GET',
     data: {access_token: token}
   });
-}
+};
 
 // Simply copy all key-data pairs from json received from instagram
 MyUser.prototype.saveMyInfo = function (data) {
   var keys = Object.keys(data.data);
-  for(var i in keys) {
+  for (var i in keys) {
     this[keys[i]] = data.data[keys[i]];
   }
 // Set the user password
@@ -278,16 +278,21 @@ function getData (fun) {
         return Promise.resolve(x.takeMyMedias());
       }).then(
       function (data) {
-        if(localStorage[x.id]) {
-        data.data = data.data.concat(JSON.parse(localStorage[x.id]));
+        try {
+          if(localStorage[x.id]) {
+            data.data = data.data.concat(JSON.parse(localStorage[x.id]));
+          }
+        } catch (err) {
+          noLoacalStorage = true;
+          console.log('Seems you do not have localStorage', err);
+        } finally {
+          x.saveMyMedias(data);
+          return x;
         }
-        x.saveMyMedias(data);
-        return x;
       }
     ); 
   })).then(
     function (data) {
-      console.log(users);
       fun();
     }
   ).catch(function (err) {

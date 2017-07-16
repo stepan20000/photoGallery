@@ -27,6 +27,7 @@ MediaContainer.prototype.showBigMedia = function (container, media) {
 
 //First argument is a jQuery element where the big image shpould be, media is a media object
 MediaContainer.prototype.showBigImage = function (container, media) {
+  var _this = this;
   container.html('');
 // collect data from media obj
   var linkToImage = media.getImageAsLink('standard', 'bigMedia__link', 'bigMedia__image');
@@ -54,6 +55,7 @@ MediaContainer.prototype.showBigImage = function (container, media) {
     media.makeLike();
     like.html(media.likes.count);
     like.toggleClass('like_active');
+    _this.refresh();
   });
   
   close.on('click', function () {
@@ -100,6 +102,7 @@ MediaContainer.prototype.showBigCarousel = function (container, media) {
     media.makeLike();
     like.html(media.likes.count);
     like.toggleClass('like_active');
+    this.refresh();
   });
   
   close.on('click', function () {
@@ -290,11 +293,6 @@ Find.prototype.constructor = Find;
 Find.prototype._showPage = function(page) {
   //Clear page
   $(this.target).html('');
-// Hide pagination if we have less than 2 page of results
-  if (this.currentDatabase.length <= 1) {
-    $('.pag').fadeOut();
-    return;
-  }
 // Range of item to display on current page from start to end
   var start = this.itemsOnPage * page;
   var end = start + this.itemsOnPage;
@@ -316,6 +314,10 @@ Find.prototype._showPage = function(page) {
 // Remove all close buttons in search results
   $('.close').remove();
   this._adjustPag(page);
+  // Hide pagination if we have less than 2 page of results
+  if (this.currentDatabase.length <= 1) {
+    $('.pag').fadeOut();
+  }
 };
 
 Find.prototype._adjustPag = function(page) {
@@ -430,6 +432,7 @@ Find.prototype.reset = function() {
   $('option').prop('selected', false);
    $('#search').val('');
   this.currentDatabase = this.resetCurrentDatabase();
+  this.hashTags = this.takeHashTags();
   this._showPage(0);
   this.infoTag.fadeOut();
   this.infoUser.fadeOut();
@@ -473,7 +476,6 @@ Find.prototype._displayTag = function() {
       this.currentDatabase = this.currentDatabase.concat(el);
     }
   }, this);
-
   this._sortBy();
   this._showPage(0);
 //If there are media with given tag display info 
@@ -521,6 +523,10 @@ Find.prototype._find = function(evt) {
       this._displayUser(evt);
     }
   }
+};
+
+Find.prototype.refresh = function () {
+  
 };
 
 

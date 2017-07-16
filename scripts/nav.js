@@ -19,10 +19,14 @@ function navFun() {
   
   
   $('#nav-login').on('click', function () {
-    if(loggedUser) {
-      loggedDialog();
+    if(noLoacalStorage) {
+      alert('Sorry you can not Log in and uppload image because your browser does not support localStorage')
     } else {
-      loginDialog();
+      if(loggedUser) {
+        loggedDialog();
+      } else {
+        loginDialog();
+      }
     }
   });
 // Event listener for closing of the dialog window  

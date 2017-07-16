@@ -1,7 +1,7 @@
 //------ IMAGESSET -----------
 //ImageSet class has two child mozaik and slider.
 // Constructor ImageSet
-function ImagesSet (target, images) {
+function ImagesSet(target, images) {
   this.target  = target;
   this.images = images;
   this.l = images.length;
@@ -9,16 +9,16 @@ function ImagesSet (target, images) {
 
 // Simply append images from this.images array(given as an argument to constructor) 
 // to the target
-ImagesSet.prototype.addImages = function(target) {
+ImagesSet.prototype.addImages = function (target) {
   this.images.forEach(function (image) {
     $(target).append(image);
   });
-}
+};
 
 //------ IMAGESSET END-----------
 
 // ------ MOZAIK ----------------
-function Mozaik (target, images) {
+function Mozaik(target, images) {
   ImagesSet.call(this, target, images);
   this.addImages(this.target);
 }
@@ -29,7 +29,7 @@ Mozaik.prototype.constructor = Mozaik;
 
 // ------ SLIDER -------------------
 // target is a element-container for slider, images is an array with images or wrapped in <a> tag images
-function Slider (target, images) {
+function Slider(target, images) {
   var _this = this;
   ImagesSet.call(this, target, images);
   this.slideIndex = 0;
@@ -47,8 +47,8 @@ function Slider (target, images) {
 // Save all slide's images 
   this.slides = $(this.target).find('.slider').children(".slider__viewport").find('.slider__slide');
 //Add badges. If there are more than 10 images in slider add small badges
-  if(this.l <= 10) {
-    for(var i = 0; i < this.l; i ++){
+  if (this.l <= 10) {
+    for (var i = 0; i < this.l; i ++){
       $(target).find('.slider').children('.slider__controls').append("<span class='slider__badge'></span>");
     }
   } else {

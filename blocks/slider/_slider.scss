@@ -1,7 +1,7 @@
 $slide-height: 500px;
 
 .slider {
-  height: calc(100vh - 170px);
+  height: calc(100vh - 100px);
   width: 85%;
   margin: auto;
   padding: 10px 20px;
@@ -26,11 +26,14 @@ $slide-height: 500px;
   
   &__viewport {
     margin: auto;
-    height: calc(100vh - 170px);
+    height: 100%;
     text-align: center;
     display: inline-block;
     overflow: hidden;
     max-height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   &__controls {
@@ -63,7 +66,7 @@ $slide-height: 500px;
     border: 2px solid grey;
     display: inline-block;
     cursor: pointer;
-    margin: 10px 3px;
+    margin: 10px 8px;
     
     &_small {
       padding: 2px;
@@ -82,24 +85,22 @@ $slide-height: 500px;
 
 @media only screen and (max-width: $breakpoint) {
   .slider {
-  
-    &__viewport {
-      height: 300px;
-      line-height: 300px;
+    height: 90vw;
+    width: 90%;
+    padding: 10px 5px;
+    
+     &__slide, .slider__img {
+       height: auto;    
     }
-  }  
+  } 
 }
 
-@media only screen and (max-width: 620px) {
+@media only screen and (max-width: $breakpoint2) {
   .slider {
-  
-    &__viewport {
-      height: 200px;
-      line-height: 200px;
+   
+    &__badge {
+      padding: 3px;
+      margin: 10px 1%;
     }
-    
-    &__slide {
-      max-width: 1000%;
-    }
-  }  
+  }
 }

@@ -1,11 +1,12 @@
 $mozaik-size: 100px;
 .mozaik {
-
+  margin: auto;
   
   &__wrapper {
     padding: 10px 20px;
     border-radius: 10px;
     background-color: #ccc;
+    margin: auto;
   }
   
   &__container {
@@ -41,4 +42,17 @@ $mozaik-size: 100px;
   &__head {
     text-align: center;
   }
+}
+
+@media only screen and (max-width: $breakpoint2) {
+  .mozaik {
+    height: 90vw;
+    width: 90%;
+    padding: 10px 5px;
+    
+     &__one,  {
+       height: 50px;
+       width: 50px;
+    }
+  } 
 }

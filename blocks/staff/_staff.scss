@@ -409,10 +409,10 @@
 
 
 .content {
-  padding-left: 20px;
-  padding-right:  20px; 
+  padding: 20px 5px;
   height: calc(100vh - 85px);
   overflow: scroll;
+  box-sizing: border-box;
 }
 
 

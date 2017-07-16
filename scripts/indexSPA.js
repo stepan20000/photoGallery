@@ -12,8 +12,11 @@ var users;
 var loggedUser = false;
 // Global variables for mediaContainers objects
 var allPhoto, find;
-
+// Flag used for calling initMap function only once
 var mapInited = false;
+
+var noLoacalStorage = false;
+
 
 // Take a array with user's ids and create corresponding objects. After that elements in users array are instance of myUser
 users = userIds.map(function (id) {
@@ -295,12 +298,14 @@ function displayNoLoggedUser () {
 // The first function which called when application started
 function startSPA () {
   // Setup router 
-var router = new Router();
-router.route('index', indexFun);
-router.route('all-photo', allPhotoFun);
-router.route('find', findFun);
-router.route('contacts', contactsFun);
-router.route('', indexFun);
+  var router = new Router();
+  router.route('index', indexFun);
+  router.route('all-photo', allPhotoFun);
+  router.route('find', findFun);
+  router.route('contacts', contactsFun);
+  router.route('', indexFun);
+  router.route('!Services', function () {return;})
+  //router.notFound(indexFun);
   
   $(document).ready(function () {
 //Start navigation logic in navbar
@@ -319,33 +324,33 @@ router.route('', indexFun);
 // Make find 
     find = new Find($('.find')[0]);
     
-// Go to correct route when SPA starts
-    if (window.location.hash == '') {
-      router.toPath('index');
-    } else {
-      router.toPath(window.location.hash.slice(1));
-    }
+    router.toPath(window.location.hash.slice(1));
     
 // Check for loggedUser stored in local storage. We store the id of loggedUser or 0 if there is no logged user
-    if(localStorage.storedLoggedUser) {
-      if(localStorage.storedLoggedUser != '0'){
-        for(var i = 0; i < users.length; i++) {
-          if(localStorage.storedLoggedUser == users[i].id){
-            loggedUser = users[i];
-            break;
+    if(noLoacalStorage) {
+      displayNoLoggedUser(); 
+    } else {
+      if(localStorage.storedLoggedUser) {
+        if(localStorage.storedLoggedUser != '0'){
+          for(var i = 0; i < users.length; i++) {
+            if(localStorage.storedLoggedUser == users[i].id){
+              loggedUser = users[i];
+              break;
+            }
           }
-        }
-        if(!loggedUser) {
-          displayNoLoggedUser();   
+          if(!loggedUser) {
+            displayNoLoggedUser();   
+          } else {
+            displayLoggedUser();
+          }
         } else {
-          displayLoggedUser();
+          displayNoLoggedUser();  
         }
       } else {
-        displayNoLoggedUser();  
+        displayNoLoggedUser();
       }
-    } else {
-      displayNoLoggedUser();
     }
+    
 
     // Start routing
     window.onhashchange = function(evt) {
