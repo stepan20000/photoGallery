@@ -285,13 +285,18 @@
   .all-photo__mask {
     line-height: 90vw; } }
 .grid {
-  position: relative; }
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-flow: dense;
+  grid-gap: 20px; }
   .grid__item {
     overflow: hidden;
-    position: relative;
-    display: inline-block; }
+    position: relative; }
     .grid__item:hover .grid__mask {
       top: 0; }
+  .grid__img {
+    width: 100%; }
   .grid__mask {
     position: absolute;
     width: 100%;

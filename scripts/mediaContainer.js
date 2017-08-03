@@ -220,28 +220,8 @@ Grid.prototype.addEvtListeners = function () {
 }
 
 Grid.prototype.addItems = function (refresh) {
-  var firstItem;
-  if(this.database.length == 0){
-    console.log("No data loaded");
-    return;
-  }
-  if(!refresh) {
-    if(this.lastItDisplayed === undefined) {
-      firstItem = 0;
-      this.lastItDisplayed = 5;
-    } else {
-      firstItem = this.lastItDisplayed + 1;
-      this.lastItDisplayed = this.lastItDisplayed + 6; // 6 is a number of photo to add each time
-    }
-    if(this.lastItDisplayed > this.database.length -1) {
-      this.lastItDisplayed = this.database.length - 1;
-      $("#load-more").attr("disabled", true);
-    }
-  } else { // if refresh add all items from 0 to lastItDisplayed
-    firstItem = 0;
-  }
-
-  for(var i = firstItem; i <= this.lastItDisplayed; i++) {
+  console.log(this.database);
+  for(var i = 0; i < this.database.length; i++) {
     if(this.database[i].type == 'carousel') { // carousel has spec symbol on the right top
       $('<figure class="grid__item"><img src="blocks/staff/img/carousel-icon-white.png"' +
           'alt="carousel icon" class="carousel-icon">' +
