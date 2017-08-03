@@ -2,3 +2,4 @@
 package-lock.json
 .btackets.json
 .eslintrc.js
+.idea/

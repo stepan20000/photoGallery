@@ -44,6 +44,15 @@ function allPhotoFun () {
   $('#allPhotoPage').fadeIn();
 }
 
+function gridFun () {
+  // Adjust navigation bar
+  $('.nav__link').removeClass('nav__link_current');
+  $('.nav__link[href="#grid"]').addClass('nav__link_current');
+// Switch off all containers and switch on needed index container
+  $('.content').fadeOut();
+  $('#gridPage').fadeIn();
+}
+
 function findFun () {
   // Adjust navigation bar
   $('.nav__link').removeClass('nav__link_current');
