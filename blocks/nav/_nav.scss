@@ -61,7 +61,7 @@ $link-hover-color: #2581DC;
     
     &:not(:only-child):after {
       padding-left: 4px;
-      content: ' ▾';
+      content: ' \25bc';
     } 
     &_login {
       cursor: pointer;

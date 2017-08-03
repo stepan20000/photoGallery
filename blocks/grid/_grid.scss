@@ -1,0 +1,41 @@
+.grid {
+  position:  relative;
+
+  &__item {
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+
+    &:hover .grid__mask {
+      top: 0;
+    }
+  }
+
+  &__img {
+
+  }
+
+  &__mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -1000px;
+    left: 0;
+    padding-left: 40px;
+    box-sizing: border-box;
+    background-color: rgba(10,10,10,0.7);
+    z-index: 5;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+
+}
+
+@media screen and (max-width: $breakpoint) {
+
+}
+
+@media screen and (max-width: $breakpoint2) {
+
+}

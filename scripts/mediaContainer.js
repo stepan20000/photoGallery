@@ -14,7 +14,7 @@ MediaContainer.prototype.resetCurrentDatabase = function () {
   }, []).sort(function (a, b) {
     return b.created_time - a.created_time;
   });
-}
+};
 
 // Decide what function call for displaying big media according to the media type ('image' or 'carousel')
 MediaContainer.prototype.showBigMedia = function (container, media) {
@@ -23,7 +23,7 @@ MediaContainer.prototype.showBigMedia = function (container, media) {
   } else {
     this.showBigImage(container, media);
   }
-}
+};
 
 //First argument is a jQuery element where the big image shpould be, media is a media object
 MediaContainer.prototype.showBigImage = function (container, media) {
@@ -73,7 +73,7 @@ MediaContainer.prototype.showBigImage = function (container, media) {
   
   
   container.append(bigMedia);
-}
+};
 
 // Use slider class for making big media with 'carouse' type
 MediaContainer.prototype.showBigCarousel = function (container, media) {
@@ -117,26 +117,17 @@ MediaContainer.prototype.showBigCarousel = function (container, media) {
   slider.append(figcaption);
   slider.append(close);
   
-} 
+};
 
 //------------------- MediaContainer END ------------------------
 // ------------------- ALLPHOTO --------------------------------------
 function AllPhoto(target) {
   MediaContainer.call(this, target);
-  var _this = this;
 // Make media's database 
   this.database = this.resetCurrentDatabase();
   this.lastItDisplayed = undefined;
   this.addItems();
-//Display new images when button 'Load more' is clicked
-  $("#load-more").on("click", function(evt){
-    _this.addItems();
-  });
-
-  $('.all-photo').on('click', function (evt) {
-    _this.showBigMedia($('#bigMediaContainer'), $(evt.target).parent().data('media'));
-    $('#bigMediaContainer').slideDown();
-  });
+  this.addEvtListeners();
 }
 
 AllPhoto.prototype = Object.create(MediaContainer.prototype);
@@ -147,6 +138,19 @@ AllPhoto.prototype.refresh = function () {
   this.database = this.resetCurrentDatabase();
   $(this.target).html('');
   this.addItems(true); 
+};
+
+AllPhoto.prototype.addEvtListeners = function () {
+  var _this = this;
+  //Display new images when button 'Load more' is clicked
+  $("#load-more-allPhoto").on("click", function(evt){
+    _this.addItems();
+  });
+
+  $('.all-photo').on('click', function (evt) {
+    _this.showBigMedia($('#bigMediaContainer'), $(evt.target).parent().data('media'));
+    $('#bigMediaContainer').slideDown();
+  });
 }
 
 // refresh argument may be a true or false, when user add new photo and we need to refresh allPhoto page 
@@ -189,15 +193,74 @@ AllPhoto.prototype.addItems = function(refresh) {
       '</figure>').data('media', this.database[i]).appendTo(this.target);
     } 
   }
-}
+};
 
 // ------------------- ALLPHOTO END  --------------------------------------
 
 // ------------------- GRID -----------------------------------------------
 
 function Grid (target) {
-  
+  AllPhoto.call(this, target);
+  var _thisGrid = this;
+  //Display new images when button 'Load more' is clicked
+  $("#load-more-grid").on("click", function(evt){
+    _thisGrid.addItems();
+  });
 }
+
+Grid.prototype = Object.create(AllPhoto.prototype);
+Grid.prototype.constructor = Grid;
+
+Grid.prototype.addEvtListeners = function () {
+  var _this = this;
+  //Display new images when button 'Load more' is clicked
+  $("#load-more-grid").on("click", function(evt){
+    _this.addItems();
+  });
+}
+
+Grid.prototype.addItems = function (refresh) {
+  var firstItem;
+  if(this.database.length == 0){
+    console.log("No data loaded");
+    return;
+  }
+  if(!refresh) {
+    if(this.lastItDisplayed === undefined) {
+      firstItem = 0;
+      this.lastItDisplayed = 5;
+    } else {
+      firstItem = this.lastItDisplayed + 1;
+      this.lastItDisplayed = this.lastItDisplayed + 6; // 6 is a number of photo to add each time
+    }
+    if(this.lastItDisplayed > this.database.length -1) {
+      this.lastItDisplayed = this.database.length - 1;
+      $("#load-more").attr("disabled", true);
+    }
+  } else { // if refresh add all items from 0 to lastItDisplayed
+    firstItem = 0;
+  }
+
+  for(var i = firstItem; i <= this.lastItDisplayed; i++) {
+    if(this.database[i].type == 'carousel') { // carousel has spec symbol on the right top
+      $('<figure class="grid__item"><img src="blocks/staff/img/carousel-icon-white.png"' +
+          'alt="carousel icon" class="carousel-icon">' +
+          this.database[i].getImage('standard', 'grid__img') +
+          '<div class="grid__mask">' +
+          '<span class="like like_small">' + this.database[i].likes.count + '</span>' +
+          '</div>' +
+          '</figure>').data('media', this.database[i]).appendTo(this.target);
+    } else {
+      $('<figure class="grid__item">' + this.database[i].getImage('standard', 'grid__img') +
+          '<div class="grid__mask">' +
+          '<span class="like like_small">' + this.database[i].likes.count + '</span>' +
+          '</div>' +
+          '</figure>').data('media', this.database[i]).appendTo(this.target);
+    }
+  }
+};
+
+// -------------------- GRID END ------------------------------
 
 // ------------------- FIND -------------------------------------------------
 

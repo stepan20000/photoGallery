@@ -310,6 +310,7 @@ function startSPA () {
   var router = new Router();
   router.route('index', indexFun);
   router.route('all-photo', allPhotoFun);
+  router.route('grid', gridFun);
   router.route('find', findFun);
   router.route('contacts', contactsFun);
   router.route('', indexFun);
@@ -323,13 +324,16 @@ function startSPA () {
 // Make correspondding make up in each containners using templates
     $('#indexPage').html(window.Templates.indexPage);
     $('#allPhotoPage').html(window.Templates.allPhotoPage);
+    $('#gridPage').html(window.Templates.gridPage);
     $('#findPage').html(window.Templates.findPage);
     $('#contactsPage').html(window.Templates.contactsPage);
     
 // Make index page with slider and mozaik
     initIndex();
-// Make all photot
-    allPhoto= new AllPhoto($(".all-photo")[0]); 
+// Make all photo
+    allPhoto= new AllPhoto($(".all-photo")[0]);
+// Make grid
+    grid = new Grid($('.grid')[0]);
 // Make find 
     find = new Find($('.find')[0]);
     

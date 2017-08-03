@@ -36,9 +36,14 @@
   <script type="text/template" data-name="allPhotoPage">
     <div class="all-photo"></div>
       <div class="control">
-        <button id="load-more" class="btn">Load more</button>
+        <button id="load-more-allPhoto" class="btn">Load more</button>
       </div>
-      <div id="bigMediaContainer"></div>
+  </script>
+
+  <script type="text/template" data-name="gridPage">
+    <div class="grid"></div>
+    <div class="control">
+      <button id="load-more-grid" class="btn">Load more</button>
     </div>
   </script>
   
@@ -143,6 +148,7 @@
           <ul class="nav__list">
             <li class="nav__list-li"><a class="nav__link" href="#index">Home</a></li>
             <li class="nav__list-li"><a class="nav__link" href="#all-photo">All Photo</a></li>
+            <li class="nav__list-li"><a class="nav__link" href="#grid">Grid</a></li>
             <li class="nav__list-li"><a class="nav__link" href="#find">Search</a></li>
             <li class="nav__list-li"><a class="nav__link" href="#contacts">Contacts</a></li>
             <li class="nav__list-li"><a class="nav__link" href="#!Services">Services</a>
@@ -160,11 +166,14 @@
   </header> 
   <div id="indexPage" class="content"></div>
   <div id="allPhotoPage" class="content"></div>
+  <div id="gridPage" class="content"></div>
   <div id="findPage" class="content"></div>
   <div id="contactsPage" class="content"></div>
-  
-  
-<!-- ------------------------ Dialog --------------------- -->
+  <div id="bigMediaContainer"></div>
+
+
+
+  <!-- ------------------------ Dialog --------------------- -->
   <section class="dialog-window">
     <div class="dialog-window__content"></div>
 <!--
